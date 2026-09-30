@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ritpack Supermarket</title>
+<style>
+:root{--ink:#17264a;--ink-soft:rgba(23,38,74,.1);--accent:#d1a03a;--accent-soft:rgba(209,160,58,.16);--accent-ink:#1a1405;
+--paper:#f3f4f7;--card:#fff;--line:#e2e6ec;--text:#1b2433;--muted:#667487;
+--ok:#1b9a62;--ok-bg:#e2f5ec;--warn:#b76e00;--warn-bg:#fdf0d9;--bad:#d24545;--bad-bg:#fbe5e5;--info:#2f6fda;--info-bg:#e4edfc;
+--r:10px;--font:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font:15px/1.45 var(--font);color:var(--text);background:var(--paper);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+
+/* ---------- login ---------- */
+.login{min-height:100vh;display:grid;grid-template-columns:minmax(320px,46%) 1fr}
+.login-l{background:var(--ink);color:#eef1f8;padding:56px 52px;display:flex;flex-direction:column;justify-content:space-between}
+.login-l .mono{width:56px;height:56px;font-size:24px;border-radius:15px}
+.login-l h1{font-size:34px;line-height:1.12;margin:26px 0 12px;font-weight:700;letter-spacing:-.4px}
+.login-l p.tag{font-size:16px;color:rgba(238,241,248,.75);max-width:34ch}
+.login-l ul{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.login-l li{display:flex;gap:12px;align-items:flex-start;color:rgba(238,241,248,.86);font-size:14.5px}
+.login-l li i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:8px}
+.login-r{display:grid;place-items:center;padding:32px}
+.login-card{width:100%;max-width:380px}
+.login-card h2{font-size:22px;margin-bottom:4px}
+.login-card .sub{color:var(--muted);margin-bottom:22px}
+.login-card .btn{width:100%;padding:11px;margin-top:6px}
+.login-card .demo{margin-top:16px;font-size:13px;color:var(--muted)}
+@media(max-width:820px){.login{grid-template-columns:1fr}.login-l{padding:28px}.login-l h1{font-size:26px}.login-l ul{display:none}}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:244px 1fr;min-height:100vh}
+.side{background:var(--ink);color:#e9edf7;display:flex;flex-direction:column;padding:18px 14px;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:11px;align-items:center;padding:4px 6px 18px}
+.mono{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:16px;flex:none}
+.brand b{display:block;font-size:14.5px;line-height:1.2}
+.brand small{color:rgba(233,237,247,.62);font-size:12px}
+.nav{display:flex;flex-direction:column;gap:2px;overflow:auto;padding-right:2px}
+.nav .gap{height:10px}
+.nav button{display:flex;align-items:center;gap:11px;background:none;border:0;color:rgba(233,237,247,.8);padding:10px 12px;border-radius:9px;cursor:pointer;text-align:left;font-size:14.5px}
+.nav button svg,.ico{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav button:hover{background:rgba(255,255,255,.08)}
+.nav button.on{background:var(--accent);color:var(--accent-ink);font-weight:650}
+.side .foot{margin-top:auto;padding:14px 6px 0;border-top:1px solid rgba(255,255,255,.14);font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.side .foot b{display:block;font-size:13.5px}
+.side .foot span{color:rgba(233,237,247,.6)}
+.side .foot button{background:rgba(255,255,255,.1);border:0;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12.5px}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 28px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;flex-wrap:wrap}
+.top h1{font-size:20px;font-weight:700;letter-spacing:-.2px}
+.top .r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.net{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px 6px 12px;cursor:pointer;font-size:13.5px;font-weight:600}
+.net .dot{width:9px;height:9px;border-radius:50%;background:#9aa6b5}
+.net.on{border-color:#a9dcc3;background:var(--ok-bg);color:#0f6b43}
+.net.on .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(27,154,98,.18)}
+.chip{font-size:13.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:#fff}
+.chip b{color:var(--text)}
+.chip i{font-style:normal;color:var(--warn);font-weight:600;margin-left:6px}
+.view{padding:24px 28px 70px;max-width:1280px;width:100%}
+.view.view-wide{max-width:none}
+@media(max-width:860px){
+ .app{grid-template-columns:1fr}
+ .side{position:static;height:auto;flex-direction:column;padding:10px}
+ .nav{flex-direction:row;overflow-x:auto;padding-bottom:4px}.nav .gap{display:none}
+ .nav button{white-space:nowrap;padding:8px 10px}.side .foot{display:none}.brand{padding-bottom:8px}
+ .top,.view{padding-left:14px;padding-right:14px}
+}
+
+/* ---------- basics ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card>h3,.card-h{font-size:15.5px;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.muted{color:var(--muted)}.small{font-size:13px}.right{text-align:right}.num{text-align:right;white-space:nowrap}
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stack{display:grid;gap:16px}
+@media(max-width:980px){.grid2,.grid3{grid-template-columns:1fr}}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;line-height:1.2;white-space:nowrap}
+.btn:hover{border-color:#bfc8d4}
+.btn.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.acc{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn.bad{color:var(--bad)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn.lg{padding:12px 20px;font-size:16px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.bar .sp{flex:1}
+input,select,textarea{border:1px solid #cdd4de;border-radius:8px;padding:8px 10px;background:#fff;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:2px solid var(--accent-soft)}
+.search{max-width:280px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:13.5px;cursor:pointer;font-weight:600;color:var(--muted)}
+.chips button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.badge{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12.5px;font-weight:650;white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:#0f6b43}.b-warn{background:var(--warn-bg);color:var(--warn)}.b-bad{background:var(--bad-bg);color:#a82c2c}.b-info{background:var(--info-bg);color:#1f52ad}.b-mute{background:#eceff3;color:#4d5a6b}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:13px;color:var(--muted);font-weight:650;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fafbfc}
+td{padding:10px 12px;border-bottom:1px solid #edf0f4;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#fafbfd}
+td.acts,th.acts{text-align:right;white-space:nowrap}
+td.acts .btn{margin-left:4px}
+.tc{padding:0;overflow:hidden}
+.sub2{display:block;color:var(--muted);font-size:12.5px}
+.empty{padding:34px 16px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--text);margin-bottom:2px}
+.strip{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.strip .s{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:13.5px;color:var(--muted)}
+.strip .s b{display:block;color:var(--text);font-size:17px;line-height:1.25}
+.prog{height:8px;border-radius:99px;background:#e9edf2;overflow:hidden;min-width:90px}
+.prog i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.prog.warn i{background:#e0a020}.prog.bad i{background:var(--bad)}.prog.acc i{background:var(--accent)}
+
+/* ---------- forms + modal ---------- */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld{display:block}.fld.full{grid-column:1/-1}
+.fld>span{display:block;font-size:13px;font-weight:650;color:#455266;margin-bottom:4px}
+.fld small{color:var(--muted);font-size:12.5px}
+.pwwrap{position:relative;display:flex}
+.pwwrap input{flex:1;padding-right:56px}
+.pwtoggle{position:absolute;right:4px;top:4px;bottom:4px;border:0;background:#eceff3;color:#455266;font-size:12px;font-weight:650;border-radius:6px;padding:0 10px;cursor:pointer}
+.pwtoggle:hover{background:#dfe4ea}
+@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
+.modal-back{position:fixed;inset:0;background:rgba(14,22,38,.5);display:grid;place-items:center;padding:18px;z-index:80;overflow:auto}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:520px;box-shadow:0 24px 70px rgba(10,18,32,.35)}
+.modal.wide{max-width:820px}
+.modal header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.modal h3{font-size:17px}
+.modal .x{border:0;background:none;font-size:26px;line-height:1;cursor:pointer;color:var(--muted)}
+.mbody{padding:20px;max-height:68vh;overflow:auto}
+.modal footer{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--line)}
+#toast-root{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:120;display:grid;gap:8px;justify-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:80vw}
+.toast.bad{background:var(--bad)}.toast.ok{background:var(--ok)}
+
+/* ---------- dashboard ---------- */
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.hello h2{font-size:24px;letter-spacing:-.3px}
+.hello p{color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}
+@media(max-width:980px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px}
+.kpi.bad{border-left-color:var(--bad)}.kpi.warn{border-left-color:#e0a020}.kpi.ok{border-left-color:var(--ok)}.kpi.info{border-left-color:var(--info)}
+.kl{display:block;color:var(--muted);font-size:13.5px}
+.kv{display:block;font-size:26px;font-weight:750;letter-spacing:-.5px;margin:2px 0}
+.ks{display:block;color:var(--muted);font-size:13px}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{font:12px var(--font);fill:#667487}
+.chart .v{font-weight:700;fill:#1b2433}
+.list{list-style:none;padding:0;margin:0}
+.list li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #edf0f4}
+.list li:last-child{border-bottom:0}
+.list b{display:block;font-weight:650}
+.list span{color:var(--muted);font-size:13px}
+.list em{font-style:normal;font-weight:700;white-space:nowrap}
+
+/* ---------- scan / result ---------- */
+.scan{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}
+@media(max-width:980px){.scan{grid-template-columns:1fr}}
+.scanbox{text-align:center;padding:28px 22px}
+.scanbox .big{font-size:20px;font-weight:700;margin:6px 0 4px}
+.scanbox input.code{font-size:22px;text-align:center;letter-spacing:2px;padding:14px;margin:14px 0 6px;border-width:2px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:6px}
+.seg button{border:0;background:#fff;padding:8px 20px;cursor:pointer;font-weight:650;color:var(--muted)}
+.seg button.on{background:var(--ink);color:#fff}
+.tryit{margin-top:16px;text-align:left}
+.tryit>span{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.res-back{position:fixed;inset:0;background:rgba(14,22,38,.55);display:grid;place-items:center;z-index:90;padding:18px}
+.res-card{background:#fff;border-radius:18px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4);animation:pop .22s ease-out}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.res-banner{padding:22px;text-align:center;color:#fff}
+.res-banner.ok{background:var(--ok)}.res-banner.bad{background:var(--bad)}.res-banner.warn{background:#d98a11}
+.res-banner b{display:block;font-size:26px;letter-spacing:.5px}
+.res-body{padding:22px;text-align:center}
+.avatar{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;background:var(--ink);color:#fff;font-size:24px;font-weight:700}
+.res-body h4{font-size:20px}
+.res-body .rows{margin-top:14px;background:#f5f7fa;border-radius:10px;padding:8px 14px;text-align:left}
+.res-body .rows div{display:flex;justify-content:space-between;padding:5px 0;font-size:14px;gap:10px}
+.res-body .rows div span:first-child{color:var(--muted)}
+.res-body .rows div span:last-child{font-weight:650;text-align:right}
+@media(prefers-reduced-motion:reduce){.res-card{animation:none}}
+
+/* ---------- till ---------- */
+.till{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+.till>aside.card{position:sticky;top:86px;height:calc(100vh - 102px);display:flex;flex-direction:column;overflow:hidden}
+.till>aside.card>.card-h{flex:none}
+.till>aside.card .cartlines{flex:1 1 auto;overflow:auto;min-height:48px;margin:0 -18px;padding:0 18px}
+.till>aside.card .cartfoot{flex:none;padding-top:12px;margin-top:10px;border-top:1px solid var(--line)}
+@media(max-width:1000px){.till{grid-template-columns:1fr}.till>aside.card{position:static;height:auto;display:block;overflow:visible}.till>aside.card .cartlines{overflow:visible;max-height:none;margin:0;padding:0}}
+.gfoot{position:fixed;left:0;right:0;bottom:8px;display:flex;justify-content:center;pointer-events:none;z-index:50}
+.gfoot span{background:rgba(255,255,255,.9);color:#445064;font-size:11px;font-weight:600;padding:4px 12px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.16)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:96px}
+.tile:hover{border-color:var(--accent)}
+.tile b{font-size:14px;line-height:1.25}
+.tile .p{margin-top:auto;font-weight:750;font-size:15.5px}
+.tile small{color:var(--muted)}
+.tile.out{opacity:.5}
+.tile.blocked{background:var(--bad-bg);border-color:#efbcbc}
+.cartline{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #edf0f4}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px}
+.qty button{border:0;background:none;width:28px;height:28px;cursor:pointer;font-size:16px}
+.qty span{min-width:24px;text-align:center;font-weight:650}
+.totalrow{display:flex;justify-content:space-between;font-size:20px;font-weight:800;padding:12px 0}
+.rcpt{font:13px/1.4 "Courier New",monospace;width:300px;margin:0 auto;color:#000}
+.rcpt h4{text-align:center;font-size:16px;margin:0}
+.rcpt .c{text-align:center}
+.rcpt hr{border:0;border-top:1px dashed #000;margin:8px 0}
+.rcpt .l{display:flex;justify-content:space-between;gap:8px}
+.rcpt .b{font-weight:700;font-size:15px}
+
+/* ---------- boards ---------- */
+.kan{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+@media(max-width:1100px){.kan{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.kan{grid-template-columns:1fr}}
+.col{background:#eef1f5;border-radius:12px;padding:10px;min-height:200px}
+.col h4{font-size:14px;display:flex;justify-content:space-between;padding:2px 4px 10px}
+.col h4 span{background:#fff;border-radius:99px;padding:0 9px;font-size:13px}
+.qc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:8px}
+.qc .n{display:inline-grid;place-items:center;min-width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-weight:800;margin-right:8px}
+.qc b{font-size:14.5px}
+.qc p{font-size:13px;color:var(--muted);margin:4px 0 8px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.room{background:#fff;border:1px solid var(--line);border-top:5px solid var(--ok);border-radius:10px;padding:12px 14px;text-align:left;cursor:pointer;min-height:118px;display:flex;flex-direction:column;gap:2px}
+.room:hover{box-shadow:0 4px 14px rgba(20,30,50,.1)}
+.room .no{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.room small{color:var(--muted)}
+.room .who{margin-top:auto;font-weight:650;font-size:13.5px}
+.room.occupied{border-top-color:var(--bad)}.room.cleaning{border-top-color:#e0a020}.room.maintenance{border-top-color:#8896a8;opacity:.75}
+.seatwrap{max-width:330px;margin:0 auto;padding:18px 16px;background:#eef1f5;border-radius:26px 26px 14px 14px}
+.cab{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;padding:0 6px 12px}
+.srow{display:grid;grid-template-columns:1fr 1fr 22px 1fr 1fr;gap:8px;margin-bottom:8px}
+.seat{height:38px;border-radius:8px;border:1px solid #b9c4d2;background:#fff;font-weight:700;cursor:pointer;font-size:13.5px}
+.seat:hover{border-color:var(--accent);background:var(--accent-soft)}
+.seat.sold{background:#cfd6df;color:#7d8998;cursor:not-allowed;border-color:#cfd6df}
+.tripcard{border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 14px;text-align:left;cursor:pointer;width:100%;margin-bottom:8px;display:block}
+.tripcard.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tripcard b{display:block}
+.tripcard span{color:var(--muted);font-size:13px}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-top:10px;justify-content:center}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid #b9c4d2;background:#fff;margin-right:5px;vertical-align:-2px}
+.legend i.s{background:#cfd6df;border-color:#cfd6df}
+.sms-out .m{max-width:46ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+textarea{resize:vertical}
+
+</style>
+</head>
+<body>
+<div id="login" class="login" hidden></div>
+<div id="app" class="app" hidden>
+  <aside class="side" id="side"></aside>
+  <div class="main">
+    <header class="top" id="top"></header>
+    <main class="view" id="view" tabindex="-1"></main>
+  </div>
+</div>
+<div class="gfoot" id="gfoot"><span></span></div>
+<div id="modal-root"></div>
+<div id="toast-root" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+const K=window.K={};
+let C=null,S=null,user=null,cur='dashboard';
+
+/* ================= helpers ================= */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const pad=(n,l)=>String(n).padStart(l||2,'0');
+const dstr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const today=()=>dstr(new Date());
+const parse=s=>{const p=String(s).slice(0,10).split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);};
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return dstr(d);};
+const diffDays=(a,b)=>Math.round((parse(a)-parse(b))/86400000);
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const fmtDate=s=>{if(!s)return '\u2014';const d=parse(s);return d.getDate()+' '+MON[d.getMonth()]+' '+d.getFullYear();};
+const fmtDay=s=>{const d=parse(s);return DOW[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()];};
+const nowTime=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());};
+const money=n=>'GH\u20B5'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const sum=(a,f)=>a.reduce((s,x)=>s+(f?f(x):x),0);
+const firstName=n=>{n=String(n||'').replace(/^((mr|mrs|ms|dr|pharm|rev|pastor|elder|nurse|madam|hon|prof|deaconess|deacon)\.?\s+)+/i,'');return n.split(/\s+/)[0]||'';};
+const initials=n=>String(n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const hex2rgba=(h,a)=>{const n=parseInt(h.slice(1),16);return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')';};
+Object.assign(K,{firstName,esc,pad,today,addDays,diffDays,fmtDate,fmtDay,nowTime,money,sum,initials,dstr,parse});
+K.rng=seed=>{let s=(seed>>>0)||1;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};};
+K.pick=(r,arr)=>arr[Math.floor(r()*arr.length)];
+
+const ICONS={
+home:'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10',
+users:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM4 21c0-4 4-6 8-6s8 2 8 6',
+cash:'M3 6h18v12H3zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+cart:'M3 4h2l2.4 11h11l2-8H6.2M9.5 20h.01M17 20h.01',
+box:'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10',
+msg:'M4 5h16v11H9l-5 4z',
+gear:'M4 7h10M18 7h2M4 17h2M10 17h10M14 5v4M6 15v4',
+chart:'M4 20V10M10 20V4M16 20v-7M22 20H2',
+scan:'M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M8 12h8',
+cal:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+bed:'M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6',
+bus:'M5 4h14v13H5zM5 11h14M8 20v-3M16 20v-3',
+heart:'M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z',
+pill:'M8 16l8-8a3.5 3.5 0 0 0-5-5l-8 8a3.5 3.5 0 0 0 5 5zM9.5 6.5l5 5',
+book:'M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10',
+ticket:'M3 8a2 2 0 0 1 0 4v4h18v-4a2 2 0 0 1 0-4V6H3z',
+list:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+rcpt:'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
+alert:'M12 3l10 18H2zM12 10v5M12 18h.01',
+flag:'M5 21V4M5 5h13l-2 4 2 4H5',
+star:'M12 3l2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8z'
+};
+K.icon=n=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="'+(ICONS[n]||ICONS.list)+'"/></svg>';
+
+/* ================= storage ================= */
+const KEY=()=>'nyansatek_sample_'+C.id;
+function save(){try{localStorage.setItem(KEY(),JSON.stringify(S));}catch(e){}}
+function load(){
+  let d=null;try{d=JSON.parse(localStorage.getItem(KEY()));}catch(e){}
+  if(d&&d.v===C.version){S=d;}else{reseed();}
+}
+function reseed(){
+  S={v:C.version,seq:1000,online:false,sms:{balance:C.smsBalance!=null?C.smsBalance:850},
+     settings:Object.assign({org:C.name,sender:C.sender,phone:C.phone||'',location:C.location||''},C.settings||{}),t:{}};
+  S.t=C.seed(K);
+  S.t.sms=S.t.sms||[];S.t.activity=S.t.activity||[];
+  save();
+}
+Object.defineProperty(K,'S',{get:()=>S});
+K.save=save;
+K.T=n=>{if(!S.t[n])S.t[n]=[];return S.t[n];};
+K.uid=p=>(p||'x')+(++S.seq);
+K.get=(n,id)=>K.T(n).find(r=>r.id===id);
+K.add=(n,row)=>{row.id=row.id||K.uid(n[0]);K.T(n).push(row);save();return row;};
+K.upd=(n,id,patch)=>{const r=K.get(n,id);if(r)Object.assign(r,patch);save();return r;};
+K.del=(n,id)=>{S.t[n]=K.T(n).filter(r=>r.id!==id);save();};
+K.code=(prefix,table,field)=>{
+  field=field||'code';let max=0;
+  K.T(table).forEach(r=>{const m=String(r[field]||'').match(/(\d+)$/);if(m&&String(r[field]).indexOf(prefix)===0)max=Math.max(max,+m[1]);});
+  return prefix+pad(max+1,4);
+};
+K.setting=(k,v)=>{if(v!==undefined){S.settings[k]=v;save();}return S.settings[k];};
+K.user=()=>user;
+K.log=text=>{const a=K.T('activity');a.unshift({id:K.uid('a'),at:new Date().toISOString(),text});if(a.length>60)a.length=60;save();};
+
+/* ================= SMS queue ================= */
+const segs=m=>Math.max(1,Math.ceil(String(m).length/160));
+K.sms=(to,msg,kind,name)=>{
+  if(!to)return false;
+  K.T('sms').unshift({id:K.uid('m'),to:String(to),name:name||'',msg,kind:kind||'General',status:'queued',at:new Date().toISOString(),credits:segs(msg)});
+  save();chromeTop();
+  if(S.online)flushSMS();
+  return true;
+};
+function flushSMS(){
+  let n=0,f=0;
+  K.T('sms').slice().reverse().forEach(m=>{
+    if(m.status!=='queued')return;
+    if(S.sms.balance>=m.credits){S.sms.balance-=m.credits;m.status='sent';m.sentAt=new Date().toISOString();n++;}
+    else{m.status='failed';m.err='Not enough SMS credit';f++;}
+  });
+  save();chromeTop();return{n,f};
+}
+function setOnline(v){
+  S.online=v;save();
+  if(v){const r=flushSMS();K.toast(r.n||r.f?('Connected \u2014 '+r.n+' SMS sent'+(r.f?', '+r.f+' failed (no credit)':'')):'Connected \u2014 nothing waiting to send',r.f?'bad':'ok');}
+  else K.toast('Disconnected \u2014 the system keeps working offline');
+  chromeTop();if(cur==='sms')K.render();
+}
+K.setOnline=setOnline;
+
+/* ================= UI atoms ================= */
+K.badge=(t,tone)=>'<span class="badge b-'+(tone||'mute')+'">'+esc(t)+'</span>';
+K.empty=(t,s)=>'<div class="empty"><b>'+esc(t)+'</b>'+(s?esc(s):'')+'</div>';
+K.prog=(pct,tone)=>'<div class="prog '+(tone||'')+'"><i style="width:'+Math.max(0,Math.min(100,pct))+'%"></i></div>';
+K.chips=(list,curIdx,act)=>'<div class="chips">'+list.map((l,i)=>'<button type="button" class="'+(i===curIdx?'on':'')+'" data-act="'+act+'" data-id="'+i+'">'+esc(l)+'</button>').join('')+'</div>';
+K.strip=items=>'<div class="strip">'+items.map(i=>'<div class="s">'+esc(i[0])+'<b>'+(i[2]==='raw'?i[1]:esc(i[1]))+'</b></div>').join('')+'</div>';
+K.table=(cols,rows,opt)=>{
+  opt=opt||{};
+  if(!rows.length)return K.empty(opt.empty||'Nothing here yet',opt.emptySub||'');
+  return '<div class="tablewrap"><table><thead><tr>'+cols.map(c=>'<th class="'+(c.cls||'')+'">'+esc(c.l)+'</th>').join('')+'</tr></thead><tbody>'+
+    rows.map((r,i)=>'<tr>'+cols.map(c=>'<td class="'+(c.cls||'')+'">'+(c.f?c.f(r,i):esc(r[c.k]))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+};
+K.bind=(el,h)=>{
+  el.onclick=e=>{const b=e.target.closest('[data-act]');if(!b||!el.contains(b))return;const f=h[b.dataset.act];if(f)f(b.dataset.id,b,e);};
+  el.onchange=e=>{const t=e.target.closest('[data-chg]');if(t&&el.contains(t)){const f=h[t.dataset.chg];if(f)f(t.value,t,e);}};
+  el.oninput=e=>{const t=e.target.closest('[data-inp]');if(t&&el.contains(t)){const f=h[t.dataset.inp];if(f)f(t.value,t,e);}};
+};
+K.render=()=>go(cur);
+K.go=id=>go(id);
+
+K.toast=(msg,tone)=>{
+  const root=document.getElementById('toast-root');
+  const t=document.createElement('div');t.className='toast '+(tone||'');t.textContent=msg;root.appendChild(t);
+  setTimeout(()=>t.remove(),2800);
+};
+K.modal=o=>{
+  const root=document.getElementById('modal-root');
+  const w=document.createElement('div');w.className='modal-back';
+  w.innerHTML='<div class="modal'+(o.wide?' wide':'')+'" role="dialog" aria-modal="true"><header><h3>'+esc(o.title)+'</h3><button class="x" data-close aria-label="Close">\u00D7</button></header><div class="mbody">'+o.body+'</div><footer>'+(o.buttons||[]).map((b,i)=>'<button type="button" class="btn '+(b.cls||'')+'" data-b="'+i+'">'+esc(b.l)+'</button>').join('')+'</footer></div>';
+  const close=()=>{w.remove();document.removeEventListener('keydown',key);};
+  const key=e=>{if(e.key==='Escape'&&root.lastElementChild===w)close();};
+  document.addEventListener('keydown',key);
+  w.addEventListener('mousedown',e=>{if(e.target===w)close();});
+  w.addEventListener('click',e=>{
+    if(e.target.closest('[data-close]')){close();return;}
+    const pt=e.target.closest('[data-pwtoggle]');
+    if(pt){const inp=w.querySelector('input[name="'+pt.dataset.pwtoggle+'"]');if(inp){const show=inp.type==='password';inp.type=show?'text':'password';pt.textContent=show?'Hide':'Show';}return;}
+    const b=e.target.closest('[data-b]');
+    if(b){const def=o.buttons[+b.dataset.b];const r=def.fn?def.fn(w,close):undefined;if(r!==false)close();}
+  });
+  root.appendChild(w);
+  const f=w.querySelector('input:not([type=hidden]),select,textarea');if(f&&!o.noFocus)f.focus();
+  if(o.onOpen)o.onOpen(w,close);
+  return{close,el:w};
+};
+K.confirm=(msg,yes,fn,tone)=>K.modal({title:'Please confirm',body:'<p>'+esc(msg)+'</p>',buttons:[{l:'Cancel'},{l:yes||'Yes',cls:tone||'pri',fn:()=>{fn();}}]});
+
+K.formModal=o=>{
+  const v=o.values||{};
+  const fld=f=>{
+    const val=v[f.k]!=null?v[f.k]:(f.def!=null?f.def:'');
+    let inp;
+    const optsOf=()=>((typeof f.opts==='function'?f.opts():f.opts)||[]).map(x=>typeof x==='object'?x:{v:x,l:x});
+    if(f.t==='select'){
+      inp='<select name="'+f.k+'">'+(f.blank===false?'':'<option value="">\u2014 choose \u2014</option>')+optsOf().map(x=>'<option value="'+esc(x.v)+'"'+(String(x.v)===String(val)?' selected':'')+'>'+esc(x.l)+'</option>').join('')+'</select>';
+    }else if(f.t==='pick'){
+      const os=optsOf();const cur2=os.find(x=>String(x.v)===String(val));
+      inp='<input name="'+f.k+'" list="dl_'+f.k+'" autocomplete="off" value="'+esc(cur2?cur2.l:'')+'" placeholder="'+esc(f.ph||'Start typing a name\u2026')+'"><datalist id="dl_'+f.k+'">'+os.map(x=>'<option value="'+esc(x.l)+'"></option>').join('')+'</datalist>';
+    }else if(f.t==='textarea'){
+      inp='<textarea name="'+f.k+'" rows="3">'+esc(val)+'</textarea>';
+    }else if(f.t==='password'){
+      inp='<div class="pwwrap"><input name="'+f.k+'" type="password" value="'+esc(val)+'"'+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+' autocomplete="new-password"><button type="button" class="pwtoggle" data-pwtoggle="'+f.k+'">Show</button></div>';
+    }else{
+      inp='<input name="'+f.k+'" type="'+(f.t||'text')+'" value="'+esc(val)+'"'+(f.step?' step="'+f.step+'"':'')+(f.min!=null?' min="'+f.min+'"':'')+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+(f.ro?' readonly':'')+'>';
+    }
+    return '<label class="fld'+(f.w==='full'||f.t==='textarea'?' full':'')+'"><span>'+esc(f.l)+(f.req?' *':'')+'</span>'+inp+(f.hint?'<small>'+esc(f.hint)+'</small>':'')+'</label>';
+  };
+  return K.modal({title:o.title,wide:o.wide,body:'<form class="fgrid" onsubmit="return false">'+o.fields.map(fld).join('')+'</form>'+(o.foot||''),
+    buttons:[{l:'Cancel'},{l:o.saveLabel||'Save',cls:'pri',fn:w=>{
+      const out={};
+      for(const f of o.fields){
+        const el=w.querySelector('[name="'+f.k+'"]');let x=el?el.value.trim():'';
+        if(f.t==='pick'){
+          const os=((typeof f.opts==='function'?f.opts():f.opts)||[]).map(y=>typeof y==='object'?y:{v:y,l:y});
+          if(x){const m=os.find(y=>y.l===x);if(!m){K.toast('Choose "'+f.l+'" from the list','bad');el.focus();return false;}x=m.v;}
+        }
+        if(f.req&&x===''){K.toast('Fill in: '+f.l,'bad');if(el)el.focus();return false;}
+        if(f.t==='number'&&x!=='')x=Number(x);
+        out[f.k]=x;
+      }
+      return o.onSave(out,w);
+    }}]});
+};
+
+K.result=o=>{
+  const root=document.getElementById('modal-root');
+  const w=document.createElement('div');w.className='res-back';
+  w.innerHTML='<div class="res-card"><div class="res-banner '+(o.tone||'ok')+'"><b>'+esc(o.title)+'</b></div><div class="res-body"><div class="avatar" style="background:'+(o.tone==='bad'?'#a82c2c':o.tone==='warn'?'#a86a08':'#0f6b43')+'">'+esc(initials(o.name))+'</div><h4>'+esc(o.name)+'</h4><div class="muted">'+esc(o.sub||'')+'</div><div class="rows">'+(o.rows||[]).map(r=>'<div><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></div>').join('')+'</div></div></div>';
+  const close=()=>{clearTimeout(t);w.remove();};
+  const t=setTimeout(close,o.ms||4200);
+  w.onclick=close;root.appendChild(w);
+};
+
+/* ================= printing ================= */
+const RCPT_CSS='.rcpt{font:12.5px/1.45 "Segoe UI",Arial,sans-serif;width:320px;margin:0 auto;color:#000;padding:8mm 6mm}'+
+ '.rcpt .rhead{text-align:center;margin-bottom:2px}.rcpt h4{text-align:center;font-size:17px;margin:0 0 3px;letter-spacing:.2px}'+
+ '.rcpt .c{text-align:center}.rcpt hr{border:0;border-top:1px dashed #000;margin:8px 0}'+
+ '.rcpt .l{display:flex;justify-content:space-between;gap:8px;margin:2px 0}.rcpt .b{font-weight:700;font-size:14.5px}'+
+ '.rcpt table{width:100%;border-collapse:collapse;margin:4px 0}'+
+ '.rcpt th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid #000;padding:3px 2px 4px}'+
+ '.rcpt th.n,.rcpt td.n{text-align:right}.rcpt td{padding:3px 2px;vertical-align:top;font-size:12.5px}'+
+ '.rcpt .fine{font-size:10.5px;color:#333}';
+K.print=html=>{
+  let f=document.getElementById('printframe');if(f)f.remove();
+  f=document.createElement('iframe');f.id='printframe';f.setAttribute('aria-hidden','true');
+  f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+  document.body.appendChild(f);
+  try{const d=f.contentWindow.document;d.open();d.write(html);d.close();}catch(e){return;}
+  setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print();}catch(e){}},250);
+};
+K.poweredByText=()=>'Powered by '+(C.vendorName||'NYANSATEK')+(C.vendorPhone?' — '+C.vendorPhone:'');
+K.receiptBody=o=>{
+  const st=S.settings;
+  return '<div class="rcpt">'+
+   '<div class="rhead"><h4>'+esc(st.org)+'</h4>'+
+   (st.location?'<div class="c">'+esc(st.location)+'</div>':'')+
+   (st.phone?'<div class="c">Tel: '+esc(st.phone)+'</div>':'')+
+   '</div><hr>'+
+   '<div class="c b">'+esc(o.title)+'</div>'+
+   (o.meta||[]).map(m=>'<div class="l"><span>'+esc(m[0])+'</span><span>'+esc(m[1])+'</span></div>').join('')+'<hr>'+
+   ((o.items||[]).length?'<table><thead><tr><th>Qty</th><th>Item</th><th class="n">Unit</th><th class="n">Price</th></tr></thead><tbody>'+
+     (o.items||[]).map(i=>'<tr><td>'+esc(i.q)+'</td><td>'+esc(i.n)+'</td><td class="n">'+esc(i.p)+'</td><td class="n">'+esc(i.t)+'</td></tr>').join('')+
+     '</tbody></table><hr>':'')+
+   (o.totals||[]).map(t=>'<div class="l'+(t[2]?' b':'')+'"><span>'+esc(t[0])+'</span><span>'+esc(t[1])+'</span></div>').join('')+
+   '<hr><div class="c">'+esc(o.foot||'Thank you')+'</div><div class="c fine" style="margin-top:6px">'+esc(K.poweredByText())+'</div></div>';
+};
+K.receiptText=o=>{
+  const st=S.settings;const lines=[st.org];
+  if(st.location)lines.push(st.location);
+  if(st.phone)lines.push('Tel: '+st.phone);
+  lines.push('',o.title);
+  (o.meta||[]).forEach(m=>lines.push(m[0]+': '+m[1]));
+  if((o.items||[]).length){
+    lines.push('------------------------');
+    o.items.forEach(i=>lines.push(i.q+' x '+i.n+' @ '+i.p+' = '+i.t));
+    lines.push('------------------------');
+  }
+  (o.totals||[]).forEach(t=>lines.push(t[0]+': '+t[1]));
+  lines.push(o.foot||'Thank you');
+  lines.push(K.poweredByText());
+  return lines.join('\n');
+};
+K.printReceipt=o=>K.print('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt</title><style>@page{margin:8mm}body{margin:0}'+RCPT_CSS+'</style></head><body>'+K.receiptBody(o)+'</body></html>');
+K.showReceipt=(o,after)=>K.modal({title:'Receipt',body:K.receiptBody(o),buttons:[{l:'Close',fn:()=>{if(after)after();}},{l:'Print receipt',cls:'pri',fn:()=>{K.printReceipt(o);return false;}}]});
+K.printDoc=(title,body)=>K.print('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4;margin:14mm}body{font:13px/1.45 "Segoe UI",Arial,sans-serif;color:#111}h1{font-size:20px;margin:0}h2{font-size:15px;margin:18px 0 6px}.sub{color:#555;margin:2px 0 14px}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f0f0f0}td.n,th.n{text-align:right}.tot{font-weight:700}.foot{margin-top:24px;color:#777;font-size:11px}</style></head><body><h1>'+esc(S.settings.org)+'</h1><div class="sub">'+esc(title)+' &middot; printed '+fmtDate(today())+'</div>'+body+'<div class="foot">'+esc(K.poweredByText())+'</div></body></html>');
+
+/* ================= generic CRUD view ================= */
+K.crud=(el,d)=>{
+  const st={q:'',chip:0,rng:d.range?(d.range.def||'all'):'all'};
+  const RNG=[['today','Today'],['week','Last 7 days'],['month','Last 30 days'],['all','All']];
+  const inRange=r=>{
+    if(!d.range||st.rng==='all')return true;
+    const v=String(r[d.range.key]||'').slice(0,10),t=today();
+    if(st.rng==='today')return v===t;if(st.rng==='week')return v>=addDays(t,-6)&&v<=t;if(st.rng==='month')return v>=addDays(t,-29)&&v<=t;return true;
+  };
+  const list=()=>{
+    let r=K.T(d.table).filter(inRange);
+    if(d.filter)r=r.filter(d.filter);
+    if(d.chips&&d.chips[st.chip]&&d.chips[st.chip].fn)r=r.filter(d.chips[st.chip].fn);
+    if(st.q){const q=st.q.toLowerCase();r=r.filter(x=>(d.search||[]).some(k=>String(typeof k==='function'?k(x):(x[k]==null?'':x[k])).toLowerCase().indexOf(q)>-1));}
+    if(d.sort)r=r.slice().sort(d.sort);
+    return r;
+  };
+  const cols=d.cols.slice();
+  const hasActs=!d.noEdit||!d.noDelete||(d.actions&&d.actions.length);
+  const tbl=r=>{
+    const c=cols.concat(hasActs?[{l:'',cls:'acts',f:row=>
+      (d.actions||[]).filter(a=>!a.show||a.show(row)).map(a=>'<button class="btn sm '+(a.cls||'')+'" data-act="row" data-a="'+a.a+'" data-id="'+row.id+'">'+esc(a.l)+'</button>').join('')+
+      (d.noEdit?'':'<button class="btn sm" data-act="edit" data-id="'+row.id+'">Edit</button>')+
+      (d.noDelete?'':'<button class="btn sm bad" data-act="del" data-id="'+row.id+'">Delete</button>')}]:[]);
+    return K.table(c,r,{empty:d.empty||'Nothing here yet',emptySub:d.emptySub||(d.noAdd?'':'Use the add button to create the first one.')});
+  };
+  const paintBody=()=>{const r=list();const b=el.querySelector('#cbody'),s=el.querySelector('#csum');if(b)b.innerHTML=tbl(r);if(s)s.innerHTML=d.summary?d.summary(r):'';};
+  const paint=()=>{
+    el.innerHTML='<div class="bar">'+(d.search?'<input class="search" data-inp="q" placeholder="'+esc(d.searchPh||'Search\u2026')+'" value="'+esc(st.q)+'">':'')+
+      (d.chips?K.chips(d.chips.map(c=>c.l),st.chip,'chip'):'')+
+      (d.range?K.chips(RNG.map(x=>x[1]),RNG.findIndex(x=>x[0]===st.rng),'rng'):'')+
+      '<span class="sp"></span>'+(d.topHtml||'')+(d.noAdd?'':'<button class="btn pri" data-act="add">+ '+esc(d.addLabel||'Add')+'</button>')+'</div><div id="csum"></div><div class="card tc" id="cbody"></div>';
+    paintBody();
+  };
+  const form=(row)=>K.formModal({title:(row?'Edit ':'Add ')+(d.noun||'record'),fields:typeof d.fields==='function'?d.fields(row):d.fields,values:row||(d.defaults?d.defaults():{}),wide:d.wide,
+    onSave:v=>{
+      if(d.validate){const m=d.validate(v,row);if(m){K.toast(m,'bad');return false;}}
+      if(row){const out=d.before?d.before(v,row):v;K.upd(d.table,row.id,out);if(d.after)d.after(K.get(d.table,row.id),false);}
+      else{const out=d.before?d.before(v,null):v;const nr=K.add(d.table,out);if(d.after)d.after(nr,true);K.log('Added '+(d.noun||'record')+(nr.name?': '+nr.name:''));}
+      K.toast('Saved','ok');paint();
+    }});
+  const ext={};Object.keys(d.on||{}).forEach(k=>{ext[k]=(id,b)=>d.on[k](id,b,paint);});
+  K.bind(el,Object.assign({
+    q:v=>{st.q=v;paintBody();},
+    chip:i=>{st.chip=+i;paint();},
+    rng:i=>{st.rng=RNG[+i][0];paint();},
+    add:()=>form(null),
+    edit:id=>form(K.get(d.table,id)),
+    del:id=>{const row=K.get(d.table,id);K.confirm('Delete this '+(d.noun||'record')+(row&&row.name?' ('+row.name+')':'')+'? This cannot be undone.','Delete',()=>{K.del(d.table,id);if(d.afterDelete)d.afterDelete(row);K.toast('Deleted');paint();},'bad');},
+    row:(id,b)=>{const a=d.actions.find(x=>x.a===b.dataset.a);if(a)a.fn(K.get(d.table,id),paint);}
+  },ext));
+  paint();
+  return{paint};
+};
+
+/* ================= generic till (POS + pharmacy) ================= */
+K.till=(el,d)=>{
+  const st={cart:[],q:'',cat:0,method:d.methods[0],tender:''};
+  const items=()=>{const all=K.T(d.items);return d.filter?all.filter(d.filter):all;};
+  const cats=()=>['All'].concat(Array.from(new Set(items().map(d.catOf))).sort());
+  const inCart=id=>{const l=st.cart.find(x=>x.id===id);return l?l.qty:0;};
+  const total=()=>sum(st.cart,l=>l.qty*l.price);
+  el.innerHTML='<div class="till"><section><div class="bar">'+(d.storeField?'<select id="tstoresel" data-chg="tstore" style="max-width:200px">'+d.storeField.opts().map(o=>'<option value="'+esc(o.v)+'"'+(String(o.v)===String(d.storeField.value())?' selected':'')+'>'+esc(o.l)+'</option>').join('')+'</select>':(d.storeLabel?'<span class="chip" style="margin-right:8px">'+esc(d.storeLabel)+'</span>':''))+'<input class="search" id="tq" data-inp="q" placeholder="Search '+esc(d.noun)+'\u2026">'+(d.noCategories?'':'<div id="tcats"></div>')+'</div><div class="tgrid" id="tgrid"></div></section><aside class="card" id="tcart"></aside></div>';
+  const drawCats=()=>{if(d.noCategories)return;const c=el.querySelector('#tcats');if(c)c.innerHTML=K.chips(cats(),st.cat,'cat');};
+  const drawGrid=()=>{
+    const cl=d.noCategories?'All':(cats()[st.cat]||'All');const q=st.q.toLowerCase();
+    if(d.hideUntilSearch&&!q&&cl==='All'){el.querySelector('#tgrid').innerHTML=K.empty('Search for a product','Type a name, SKU or barcode above, or choose a category.');return;}
+    const list=items().filter(it=>(cl==='All'||d.catOf(it)===cl)&&(!q||(it.name+' '+(it.sku||'')).toLowerCase().indexOf(q)>-1));
+    el.querySelector('#tgrid').innerHTML=list.length?list.map(it=>{
+      const info=d.info(it);const blk=d.block?d.block(it):null;
+      return '<button type="button" class="tile'+(it.stock<=0?' out':'')+(blk?' blocked':'')+'" data-act="add" data-id="'+it.id+'"><b>'+esc(it.name)+'</b><small>'+esc(info.sub||'')+'</small><span class="p">'+money(it.price)+'</span><small>'+(blk?esc(blk):(it.stock<=0?'Out of stock':it.stock+' in stock'))+'</small></button>';
+    }).join(''):K.empty('No match','Try another name.');
+  };
+  const drawCart=()=>{
+    const t=total();const tender=st.tender===''?t:Number(st.tender);const change=Math.max(0,tender-t);
+    el.querySelector('#tcart').innerHTML='<h3 class="card-h">Current '+esc(d.saleNoun)+(d.showRecent?'<button type="button" class="btn sm" data-act="recent" style="float:right">Recent</button>':'')+'</h3>'+
+      '<div class="cartlines">'+
+      (st.cart.length?st.cart.map(l=>'<div class="cartline"><div><b>'+esc(l.name)+'</b><span class="sub2">'+money(l.price)+' each</span></div><div class="qty"><button data-act="dec" data-id="'+l.id+'" aria-label="Less">\u2212</button><span>'+l.qty+'</span><button data-act="inc" data-id="'+l.id+'" aria-label="More">+</button></div><button type="button" class="btn sm bad" data-act="rm" data-id="'+l.id+'" title="Remove from cart" style="margin-left:6px">\u2715</button><b>'+money(l.qty*l.price)+'</b></div>').join(''):K.empty('Cart is empty','Tap an item to add it.'))+
+      '</div>'+
+      '<div class="cartfoot">'+
+      '<div class="totalrow"><span>Total</span><span>'+money(t)+'</span></div>'+
+      (d.fields||[]).map(f=>'<label class="fld" style="margin-bottom:8px"><span>'+esc(f.l)+(f.req?' *':'')+'</span>'+(f.t==='select'?'<select id="tf_'+f.k+'">'+(typeof f.opts==='function'?f.opts():f.opts).map(o=>{o=typeof o==='object'?o:{v:o,l:o};return '<option value="'+esc(o.v)+'">'+esc(o.l)+'</option>';}).join('')+'</select>':'<input id="tf_'+f.k+'" type="'+(f.t||'text')+'" placeholder="'+esc(f.ph||'')+'">')+'</label>').join('')+
+      '<label class="fld" style="margin-bottom:8px"><span>Payment</span><select data-chg="method">'+d.methods.map(m=>'<option'+(m===st.method?' selected':'')+'>'+esc(m)+'</option>').join('')+'</select></label>'+
+      (st.method==='Cash'?'<label class="fld" style="margin-bottom:8px"><span>Cash received</span><input type="number" step="0.01" id="tender" data-inp="tender" value="'+(st.tender===''?'':esc(st.tender))+'" placeholder="'+t.toFixed(2)+'"></label><div class="small muted" style="margin-bottom:8px">Change: <b>'+money(change)+'</b></div>':'')+
+      '<button class="btn acc lg" style="width:100%" data-act="pay"'+(st.cart.length?'':' disabled')+'>Complete '+esc(d.saleNoun)+'</button>'+
+      (d.completeActions||[]).map((a,i)=>'<button type="button" class="btn '+(a.cls||'')+'" style="width:100%;margin-top:8px'+(a.style?';'+a.style:'')+'" data-act="ca" data-id="'+i+'"'+(st.cart.length?'':' disabled')+'>'+esc(a.l)+'</button>').join('')+
+      (st.cart.length?'<button class="btn sm" style="width:100%;margin-top:8px" data-act="clear">Clear cart</button>':'')+
+      '</div>';
+  };
+  const addItem=(id,qty)=>{
+    qty=qty||1;
+    const it=K.get(d.items,id);if(!it)return;
+    const blk=d.block?d.block(it):null;if(blk){K.toast(blk,'bad');return;}
+    if(inCart(id)+qty>it.stock){K.toast('Only '+it.stock+' left in stock','bad');return;}
+    const l=st.cart.find(x=>x.id===id);if(l)l.qty+=qty;else st.cart.push({id,name:it.name,price:it.price,qty});
+    drawCart();
+  };
+  const promptQty=id=>{
+    const it=K.get(d.items,id);if(!it)return;
+    const blk=d.block?d.block(it):null;if(blk){K.toast(blk,'bad');return;}
+    if(it.stock<=0){K.toast('Out of stock','bad');return;}
+    K.modal({title:'Add to cart',
+      body:'<div class="fgrid"><p style="grid-column:1/-1;margin:0 0 4px"><b>'+esc(it.name)+'</b><br><span class="muted small">'+money(it.price)+' each — '+it.stock+' in stock</span></p>'+
+       '<label class="fld full"><span>Quantity</span><input id="qm_qty" type="number" min="1" max="'+it.stock+'" value="1" style="font-size:20px"></label></div>',
+      buttons:[{l:'Cancel'},{l:'Add to cart',cls:'pri',fn:w=>{
+        const n=Math.max(1,Math.floor(Number(w.querySelector('#qm_qty').value)||1));
+        addItem(id,n);
+      }}],
+      onOpen:w=>{
+        const f=w.querySelector('#qm_qty');f.focus();f.select();
+        w.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const b=w.querySelector('[data-b="1"]');if(b)b.click();}});
+      }});
+  };
+  const complete=(opt)=>{
+    opt=opt||{};
+    if(!st.cart.length)return null;
+    const vals={};
+    for(const f of (d.fields||[])){const e2=el.querySelector('#tf_'+f.k);vals[f.k]=e2?e2.value.trim():'';if((f.req||opt.require===f.k)&&!vals[f.k]){K.toast(opt.requireMsg||('Fill in: '+f.l),'bad');return null;}}
+    if(d.validate){const m=d.validate(st.cart,vals,st.method);if(m){K.toast(m,'bad');return null;}}
+    const t=total();const tender=st.method==='Cash'?(st.tender===''?t:Number(st.tender)):t;
+    if(st.method==='Cash'&&tender<t){K.toast('Cash received is less than the total','bad');return null;}
+    const n=K.T(d.sales).length+1;
+    const sale=Object.assign({ref:d.prefix+pad(n,4),date:today(),time:nowTime(),items:st.cart.map(l=>({id:l.id,name:l.name,qty:l.qty,price:l.price})),total:t,method:st.method,tendered:tender,change:Math.max(0,tender-t),cashier:user?user.name:''},vals);
+    K.add(d.sales,sale);
+    st.cart.forEach(l=>{const it=K.get(d.items,l.id);if(it)it.stock=Math.max(0,it.stock-l.qty);});
+    save();
+    if(d.onSale)d.onSale(sale);
+    K.log(d.saleNoun[0].toUpperCase()+d.saleNoun.slice(1)+' '+sale.ref+' \u2014 '+money(t));
+    st.cart=[];st.tender='';drawGrid();drawCart();
+    if(opt.autoPrint)K.printReceipt(d.receipt(sale));
+    K.showReceipt(d.receipt(sale));
+    return sale;
+  };
+  K.bind(el,{
+    q:v=>{st.q=v;drawGrid();},cat:i=>{st.cat=+i;drawCats();drawGrid();},
+    add:id=>d.qtyPrompt?promptQty(id):addItem(id),
+    inc:id=>addItem(id),
+    dec:id=>{const l=st.cart.find(x=>x.id===id);if(!l)return;l.qty--;if(l.qty<=0)st.cart=st.cart.filter(x=>x.id!==id);drawCart();},
+    rm:id=>{st.cart=st.cart.filter(x=>x.id!==id);drawCart();},
+    clear:()=>{st.cart=[];drawCart();},
+    method:v=>{st.method=v;drawCart();},
+    tender:v=>{st.tender=v;const t=total();const c=Math.max(0,(v===''?t:Number(v))-t);const s=el.querySelector('#tcart .small b');if(s)s.textContent=money(c);},
+    tstore:v=>{d.storeField.onChange(v);drawGrid();drawCart();},
+    pay:()=>complete(),
+    recent:()=>{const rows=K.T(d.sales).slice(-8).reverse();K.modal({title:'Recent '+d.saleNoun+'s',wide:true,
+      body:K.table([{l:'Ref',k:'ref'},{l:'Time',f:s=>s.time},{l:'Method',k:'method'},{l:'Total',cls:'num',f:s=>money(s.total)},
+       {l:'',cls:'acts',f:s=>'<button type="button" class="btn sm" data-act="reprint" data-id="'+s.id+'">Reprint</button>'}],rows,{empty:'No sales yet'}),
+      buttons:[{l:'Close'}],
+      onOpen:w=>{w.addEventListener('click',e=>{const b=e.target.closest('[data-act=reprint]');if(!b)return;const s=K.get(d.sales,b.dataset.id);if(s)K.printReceipt(d.receipt(s));});}});},
+    ca:i=>{const a=(d.completeActions||[])[+i];if(!a)return;if(a.method)st.method=a.method;complete({require:a.require,requireMsg:a.requireMsg,autoPrint:a.autoPrint});}
+  });
+  drawCats();drawGrid();drawCart();
+};
+
+/* ================= dashboard ================= */
+K.barChart=(data,unit)=>{
+  const W=440,H=190,pl=8,pb=26,pt=22,n=data.length,bw=(W-pl*2)/n;
+  const max=Math.max(1,...data.map(x=>x.v));
+  return '<div class="chart"><svg viewBox="0 0 '+W+' '+H+'" role="img">'+data.map((x,i)=>{
+    const h=Math.max(2,(x.v/max)*(H-pb-pt)),x0=pl+i*bw+bw*.18,w=bw*.64,y=H-pb-h;
+    return '<rect x="'+x0.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="4" fill="var(--accent)"/>'+
+      '<text class="v" x="'+(x0+w/2).toFixed(1)+'" y="'+(y-6).toFixed(1)+'" text-anchor="middle">'+esc(unit==='money'?Math.round(x.v).toLocaleString('en-US'):x.v)+'</text>'+
+      '<text x="'+(x0+w/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+esc(x.l)+'</text>';
+  }).join('')+'</svg></div>';
+};
+K.lastDays=(n,fn)=>{const out=[];for(let i=n-1;i>=0;i--){const d=addDays(today(),-i);out.push({l:DOW[parse(d).getDay()],d,v:fn(d)});}return out;};
+K.list=(items,emptyMsg)=>items.length?'<ul class="list">'+items.map(i=>'<li><div><b>'+esc(i.t)+'</b><span>'+esc(i.s||'')+'</span></div><em>'+(i.rHtml||esc(i.r||''))+'</em></li>').join('')+'</ul>':K.empty(emptyMsg||'Nothing to show yet');
+function renderDashboard(el){
+  const d=C.dashboard(K);
+  const h=new Date().getHours();const gr=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  const act=K.T('activity').slice(0,7).map(a=>({t:a.text,s:new Date(a.at).toLocaleString([], {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}));
+  el.innerHTML='<div class="hello"><div><h2>'+gr+', '+esc(firstName(user?user.name:''))+'</h2><p>'+esc(fmtDay(today()))+' \u00B7 '+esc(S.settings.org)+'</p></div></div>'+
+   '<div class="kpis">'+d.kpis.map(k=>'<div class="kpi '+(k.tone||'')+'"><span class="kl">'+esc(k.l)+'</span><b class="kv">'+esc(k.v)+'</b><span class="ks">'+esc(k.s||'')+'</span></div>').join('')+'</div>'+
+   '<div class="grid2"><div class="card"><h3>'+esc(d.chart.title)+'</h3>'+K.barChart(d.chart.data,d.chart.unit)+'</div><div class="stack">'+
+   (d.lists||[]).map(l=>'<div class="card"><h3>'+esc(l.title)+'</h3>'+K.list(l.items,l.empty)+'</div>').join('')+
+   '<div class="card"><h3>Recent activity</h3>'+K.list(act,'Activity will appear here as you work.')+'</div></div></div>';
+}
+
+/* ================= messages (SMS) ================= */
+function renderSms(el){
+  const st={to:'',msg:''};
+  const groups=C.smsGroups?C.smsGroups(K):[];
+  const draw=()=>{
+    const q=K.T('sms');
+    el.innerHTML='<div class="grid2"><div class="card"><h3>Send a message</h3>'+
+     '<label class="fld" style="margin-bottom:10px"><span>Send to</span><select id="sg"><option value="">One number\u2026</option>'+groups.map((g,i)=>'<option value="'+i+'">'+esc(g.l)+' ('+g.people().length+')</option>').join('')+'</select></label>'+
+     '<label class="fld" id="onew" style="margin-bottom:10px"><span>Phone number</span><input id="sn" type="tel" placeholder="0240000000"></label>'+
+     ((C.smsTemplates||[]).length?'<div class="chips" style="margin-bottom:10px">'+C.smsTemplates.map((t,i)=>'<button type="button" data-act="tpl" data-id="'+i+'">'+esc(t.l)+'</button>').join('')+'</div>':'')+
+     '<label class="fld"><span>Message</span><textarea id="sm" rows="5" data-inp="count" placeholder="Type your message. {name} is replaced with each person\u2019s name."></textarea></label>'+
+     '<div class="small muted" id="scount" style="margin:6px 0 12px">0 characters \u00B7 1 credit each</div>'+
+     '<button class="btn acc" data-act="send">Queue message</button> <span class="small muted">Sent as <b>'+esc(S.settings.sender)+'</b> from your own Hubtel account</span></div>'+
+     '<div class="card sms-out"><div class="card-h"><span>Outbox</span><button class="btn sm" data-act="clr">Clear sent</button></div>'+
+     (q.length?K.table([{l:'To',f:m=>esc(m.name||m.to)+'<span class="sub2">'+esc(m.to)+'</span>'},{l:'Message',f:m=>'<div class="m" title="'+esc(m.msg)+'">'+esc(m.msg)+'</div>'},{l:'Status',f:m=>m.status==='sent'?K.badge('Sent','ok'):m.status==='queued'?K.badge('Waiting for internet','warn'):K.badge('Failed','bad')}],q.slice(0,40)):K.empty('No messages yet','Messages you queue will show up here.'))+
+     (q.some(m=>m.status==='queued')?'<div class="bar" style="margin:12px 0 0"><button class="btn ok" data-act="conn">'+(S.online?'Send waiting messages':'Connect to send')+'</button></div>':'')+
+     '</div></div>';
+    const sg=el.querySelector('#sg');sg.onchange=()=>{el.querySelector('#onew').style.display=sg.value===''?'block':'none';};
+  };
+  draw();
+  const keep=()=>{st.msg=el.querySelector('#sm').value;st.to=el.querySelector('#sg').value;};
+  K.bind(el,{
+    count:v=>{el.querySelector('#scount').textContent=v.length+' characters \u00B7 '+segs(v)+' credit'+(segs(v)>1?'s':'')+' each';},
+    tpl:i=>{el.querySelector('#sm').value=C.smsTemplates[+i].text;el.querySelector('#sm').dispatchEvent(new Event('input',{bubbles:true}));},
+    clr:()=>{S.t.sms=K.T('sms').filter(m=>m.status!=='sent');save();draw();},
+    conn:()=>{setOnline(true);},
+    send:()=>{
+      const msg=el.querySelector('#sm').value.trim();const gi=el.querySelector('#sg').value;
+      if(!msg){K.toast('Type a message first','bad');return;}
+      let people;
+      if(gi==='')people=[{name:'',phone:el.querySelector('#sn').value.trim()}];else people=groups[+gi].people();
+      people=people.filter(p=>p.phone);
+      if(!people.length){K.toast('No phone numbers to send to','bad');return;}
+      people.forEach(p=>K.sms(p.phone,msg.replace(/\{name\}/g,firstName(p.name)||'there'),'Broadcast',p.name));
+      K.log('Queued '+people.length+' SMS');K.toast(people.length+' message'+(people.length>1?'s':'')+' queued','ok');
+      draw();
+    }
+  });
+}
+
+/* ================= settings ================= */
+function renderSettings(el){
+  const st=S.settings;
+  const editionLabel=C.edition||'Sample (for demonstration)';
+  el.innerHTML='<div class="grid2"><div class="stack"><div class="card"><h3>Organisation</h3><div class="fgrid">'+
+   '<label class="fld full"><span>Name shown on receipts and screens</span><input id="s_org" value="'+esc(st.org)+'"></label>'+
+   '<label class="fld"><span>Contact phone</span><input id="s_phone" value="'+esc(st.phone)+'"></label>'+
+   '<label class="fld"><span>SMS sender ID</span><input id="s_sender" maxlength="11" value="'+esc(st.sender)+'"><small>Your own approved Hubtel sender ID (up to 11 characters).</small></label></div>'+
+   '<div style="margin-top:14px"><button class="btn pri" data-act="save">Save changes</button></div></div>'+
+   '<div class="card"><h3>Your data</h3><p class="muted" style="margin-bottom:12px">Everything is stored on this computer. Take a backup to your pen drive regularly \u2014 it is the only copy.</p><div class="bar"><button class="btn pri" data-act="backup">Download backup</button><label class="btn" style="cursor:pointer">Restore from backup<input type="file" id="rf" accept=".json" hidden></label><span class="sp"></span>'+(C.noReset?'':'<button class="btn bad" data-act="reset">Reset sample data</button>')+'</div></div>'+
+   '<div class="card"><h3>Install on this computer</h3><p class="muted" style="margin-bottom:12px">Add an icon for '+esc(C.name)+' so it opens like a regular app, without going through the browser each time.</p><button class="btn pri" data-act="install">Add to desktop</button></div></div>'+
+   '<div class="card"><h3>About this installation</h3>'+K.table([{l:'',k:'a'},{l:'',f:r=>r.b}],[
+     {a:'Edition',b:editionLabel},{a:'Installed on',b:'This computer'},{a:'Licence',b:K.badge('Sample licence','info')},
+     {a:'Works without internet',b:K.badge('Yes','ok')},{a:'SMS provider',b:'Hubtel \u2014 your own account'},{a:'SMS credits left',b:'<b>'+S.sms.balance+'</b>'}]).replace('<thead><tr><th class=""></th><th class=""></th></tr></thead>','')+
+   '<p class="small muted" style="margin-top:12px">Internet is only used when you send SMS. Everything else runs on this computer.</p></div></div>';
+  K.bind(el,{
+    save:()=>{st.org=el.querySelector('#s_org').value.trim()||C.name;st.phone=el.querySelector('#s_phone').value.trim();st.sender=el.querySelector('#s_sender').value.trim()||C.sender;save();chromeSide();K.toast('Saved','ok');},
+    backup:()=>{const b=new Blob([JSON.stringify({app:C.id,at:new Date().toISOString(),data:S})],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=C.id+'-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();K.toast('Backup downloaded','ok');},
+    reset:()=>K.confirm('Reset everything to the original sample data? Your changes will be lost.','Reset',()=>{reseed();chromeAll();go('dashboard');K.toast('Sample data restored','ok');},'bad'),
+    install:()=>K.installApp()
+  });
+  el.querySelector('#rf').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const j=JSON.parse(r.result);if(j.app!==C.id||!j.data||!j.data.t)throw 0;S=j.data;save();chromeAll();go('dashboard');K.toast('Backup restored','ok');}catch(x){K.toast('That file is not a backup for this system','bad');}};
+    r.readAsText(f);
+  };
+}
+
+/* ================= shell ================= */
+function allowed(n){return !n.roles||!user||n.roles.includes(user.role);}
+function allNavDefs(){
+  const nr=C.navRoles||{};
+  return [{id:'dashboard',label:'Overview',icon:'home',roles:nr.dashboard}].concat(C.nav,[{id:'sms',label:'Messages',icon:'msg',roles:nr.sms},{id:'settings',label:'Settings',icon:'gear',roles:nr.settings}]);
+}
+function navItems(){
+  const defs=allNavDefs();
+  return [defs[0]].concat(C.nav,[{gap:1},defs[defs.length-2],defs[defs.length-1]]).filter(allowed);
+}
+function homeFor(){return (C.roleHome&&user&&C.roleHome[user.role])||'dashboard';}
+function titleOf(id){const n=navItems().find(x=>x.id===id);return n?n.label:'';}
+function chromeSide(){
+  const s=document.getElementById('side');
+  s.innerHTML='<div class="brand"><div class="mono">'+esc(initials(S.settings.org))+'</div><div><b>'+esc(S.settings.org)+'</b><small>'+esc(C.product)+'</small></div></div><nav class="nav" aria-label="Main">'+
+   navItems().map(n=>n.gap?'<div class="gap"></div>':'<button type="button" data-nav="'+n.id+'" class="'+(n.id===cur?'on':'')+'">'+K.icon(n.icon)+'<span>'+esc(n.label)+'</span></button>').join('')+'</nav>'+
+   '<div class="foot"><div><b>'+esc(user?user.name:'')+'</b><span>'+esc(user?user.role:'')+'</span></div><button type="button" data-act="logout">Sign out</button></div>';
+  s.onclick=e=>{const b=e.target.closest('[data-nav]');if(b){go(b.dataset.nav);return;}if(e.target.closest('[data-act="logout"]')){sessionStorage.removeItem(KEY()+'_u');user=null;showLogin();}};
+}
+function chromeTop(){
+  const t=document.getElementById('top');if(!t)return;
+  const q=K.T('sms').filter(m=>m.status==='queued').length;
+  t.innerHTML='<h1>'+esc(titleOf(cur))+'</h1><div class="r"><button type="button" class="net'+(S.online?' on':'')+'" data-act="net" title="Demo switch \u2014 simulates the internet connection"><span class="dot"></span>'+(S.online?'Online \u2014 sending SMS':'Working offline')+'</button><span class="chip">SMS credits <b>'+S.sms.balance+'</b>'+(q?'<i>'+q+' waiting</i>':'')+'</span></div>';
+  t.onclick=e=>{if(e.target.closest('[data-act="net"]'))setOnline(!S.online);};
+}
+function chromeAll(){chromeSide();chromeTop();}
+function go(id){
+  const navDef=allNavDefs().find(n=>n.id===id);
+  if(navDef&&!allowed(navDef))id=homeFor();
+  cur=id;chromeAll();
+  const el=document.getElementById('view');
+  el.onclick=el.onchange=el.oninput=null;
+  el.classList.toggle('view-wide',id==='till');
+  try{
+    if(id==='dashboard')renderDashboard(el);else if(id==='sms')renderSms(el);else if(id==='settings')renderSettings(el);
+    else C.views[id](el,K);
+  }catch(e){console.error(e);el.innerHTML='<div class="card"><h3>Something went wrong</h3><p class="muted">'+esc(e&&e.message)+'</p></div>';}
+  window.scrollTo(0,0);
+}
+function showLogin(){
+  document.getElementById('app').hidden=true;
+  const l=document.getElementById('login');l.hidden=false;
+  const cred=C.auth==='credentials';
+  l.innerHTML='<div class="login-l"><div><div class="mono">'+esc(initials(S.settings.org))+'</div><h1>'+esc(S.settings.org)+'</h1><p class="tag">'+esc(C.tagline)+'</p></div><ul><li><i></i>Runs on this computer \u2014 no internet needed for daily work</li><li><i></i>Your records stay in your own premises</li><li><i></i>Internet is used only when you send SMS</li></ul></div>'+
+   '<div class="login-r"><form class="login-card" id="lf"><h2>Sign in</h2>'+(cred?
+    '<p class="sub">Enter your username and password.</p><label class="fld" style="margin-bottom:12px"><span>Username</span><input id="lu" type="text" autocomplete="username"></label><label class="fld"><span>Password</span><div class="pwwrap"><input id="lp" type="password" autocomplete="current-password"><button type="button" class="pwtoggle" data-pwtoggle="lp">Show</button></div></label><button class="btn pri" type="submit" style="margin-top:14px">Sign in</button><p id="lerr" class="demo" style="display:none;color:#c0392b"></p>'
+    :'<p class="sub">Choose who is using the system.</p><label class="fld" style="margin-bottom:12px"><span>User</span><select id="lu">'+C.users.map((u,i)=>'<option value="'+i+'">'+esc(u.name)+' \u2014 '+esc(u.role)+'</option>').join('')+'</select></label><label class="fld"><span>Password</span><input type="password" value="demo1234" autocomplete="off"></label><button class="btn pri" type="submit">Sign in</button><p class="demo">Sample edition: the password is filled in for you.</p>')+
+   '</form></div>';
+  l.onclick=e=>{const pt=e.target.closest('[data-pwtoggle]');if(!pt)return;const inp=document.getElementById(pt.dataset.pwtoggle);if(inp){const show=inp.type==='password';inp.type=show?'text':'password';pt.textContent=show?'Hide':'Show';}};
+  document.getElementById('lf').onsubmit=e=>{
+   e.preventDefault();
+   if(cred){
+    const uname=document.getElementById('lu').value.trim();
+    const pass=document.getElementById('lp').value;
+    const found=C.authenticate&&C.authenticate(uname,pass);
+    if(!found){const err=document.getElementById('lerr');err.textContent='Incorrect username or password.';err.style.display='block';return;}
+    user=found;try{sessionStorage.setItem(KEY()+'_u',JSON.stringify(user));}catch(x){}enter();
+   }else{
+    user=C.users[+document.getElementById('lu').value];try{sessionStorage.setItem(KEY()+'_u',JSON.stringify(user));}catch(x){}enter();
+   }
+  };
+}
+function enter(){
+  document.getElementById('login').hidden=true;document.getElementById('app').hidden=false;
+  cur='dashboard';go(homeFor());
+}
+let deferredInstall=null;
+K.installApp=()=>{
+  if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.finally(()=>{deferredInstall=null;});return;}
+  K.modal({title:'Add '+C.name+' to your desktop',
+    body:'<p>Your browser isn\u2019t offering the one-click install here, but a proper desktop icon is still a couple of clicks away:</p>'+
+     '<ol style="margin:10px 0 0 18px;line-height:1.7">'+
+     '<li>Click the <b>\u22ee</b> menu at the top right of the browser window.</li>'+
+     '<li>Choose <b>Save and share \u2192 Create shortcut\u2026</b> (Chrome) or <b>Apps \u2192 Install this site as an app</b> (Edge).</li>'+
+     '<li>Tick <b>Open as window</b>, then click <b>Create</b>.</li></ol>'+
+     '<p style="margin-top:10px">An icon appears on the desktop that opens '+esc(C.name)+' directly in its own window, with no address bar.</p>',
+    buttons:[{l:'Got it',cls:'pri'}]});
+};
+K.start=cfg=>{
+  C=cfg;
+  const r=document.documentElement.style;
+  r.setProperty('--ink',C.ink);r.setProperty('--accent',C.accent);r.setProperty('--accent-ink',C.accentInk||'#1a1405');
+  r.setProperty('--accent-soft',hex2rgba(C.accent,.18));r.setProperty('--ink-soft',hex2rgba(C.ink,.1));
+  document.title=C.desktopName||(C.name+' \u2014 '+C.product);
+  const st=document.createElement('style');st.textContent=RCPT_CSS;document.head.appendChild(st);
+  try{
+    const gf=document.getElementById('gfoot');
+    if(gf){const sp=gf.querySelector('span')||gf;sp.textContent=K.poweredByText();}
+  }catch(e){}
+  try{
+    const bg=C.accent||'#2f6fda';
+    let iconUrl,iconType;
+    if(C.logo){iconUrl=C.logo;iconType=(/^data:([^;,]+)/.exec(C.logo)||[])[1]||'image/png';}
+    else{
+      const svg='<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192"><rect width="192" height="192" rx="36" fill="'+bg+'"/><text x="96" y="122" font-family="Arial,sans-serif" font-size="86" font-weight="700" fill="#fff" text-anchor="middle">'+esc(initials(C.desktopName||C.name))+'</text></svg>';
+      iconUrl='data:image/svg+xml,'+encodeURIComponent(svg);iconType='image/svg+xml';
+    }
+    const icon=document.createElement('link');icon.rel='icon';icon.href=iconUrl;document.head.appendChild(icon);
+    const iconShortcut=document.createElement('link');iconShortcut.rel='shortcut icon';iconShortcut.href=iconUrl;document.head.appendChild(iconShortcut);
+    const shortName=C.desktopName||C.name;
+    const manifest={name:C.desktopName||(C.name+' \u2014 '+C.product),short_name:shortName,display:'standalone',background_color:'#ffffff',theme_color:bg,icons:[{src:iconUrl,sizes:'192x192',type:iconType}]};
+    const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/json'}));document.head.appendChild(ml);
+  }catch(e){}
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
+  load();
+  let u=null;try{u=JSON.parse(sessionStorage.getItem(KEY()+'_u'));}catch(e){}
+  if(u){user=u;enter();}else showLogin();
+};
+})();
+
+</script>
+<script>
+const RITPACK_STOCK=[["NT-1783169841734","1600 T.ROLL","Personal Care",0.0,85.0,12],["8907801001781","8PM - 180ml","Beverages",24.4,30.0,33],["8902147010916","8PM - 1litre","Beverages",145.0,200.0,0],["8902147010954","8PM - 90ml","Beverages",9.3,15.0,1],["NT-1783105172430","ABENA RICE","General",0.0,80.0,1],["NT-1783191238370","ACTIVE MAN","Personal Care",0.0,250.0,1],["NT-1783191321566","ACTIVE WOMAN","Personal Care",0.0,250.0,1],["3393710003520","AFRICAN QUEEN MACKEREL","General",28.5,40.0,2],["NT-1783097440764","AGARFRAN SHITO b/s","General",0.0,150.0,2],["NT-1783097486240","AGARFRAN SHITO s/s","General",0.0,45.0,1],["4840358006882","AGOR","Beverages",116.0,160.0,3],["NT-1783102445053","AHMAD TEA","General",0.0,45.0,11],["NT-1783271842448","AIRPRO AIR FRESHENER","Household",0.0,20.0,0],["NT-1783272039930","AIRPRO TOUCH & SPRAY","Household",0.0,50.0,4],["NT-1783183710055","AJONA","Personal Care",0.0,70.0,5],["NT-1783281488522","AKSA DIFFUSER","Household",0.0,130.0,1],["NT-1783105102411","ALESTO","General",0.0,100.0,2],["NT-1783092094798","ALIBABA RICE","General",0.0,400.0,1],["096619533008","ALMOND MILK","Beverages",40.0,60.0,1],["NT-1783172666671","ALWAYS YOUNG","Personal Care",0.0,45.0,6],["NT-1783261682579","AMBROSIA","Dairy",0.0,70.0,0],["NT-1783092535436","AMEN MACKEREL","General",0.0,20.0,13],["NT-1783195365730","AMIS CARROT FACIAL","Personal Care",0.0,85.0,2],["NT-1783195245881","AMIS HALFCAST FACIAL","Personal Care",0.0,85.0,8],["NT-1783195055399","AMIS HALFCAST LOTION","Personal Care",0.0,120.0,1],["NT-1783159790261","AMOR CHOCOLATE","Snacks",0.0,50.0,19],["NT-1783163955257","AMULYA DIGESTIVE","Snacks",0.0,30.0,9],["NT-1783104442580","ANITA GROUNDNUT PASTE 0.8kg","General",0.0,50.0,0],["NT-1783086042401","APPLE & EVE","Beverages",0.0,13.0,7],["074305001321","APPLE CIDAR VINEGAR b/s","General",195.0,230.0,1],["NT-1783266203787","APTAMIL","Dairy",0.0,320.0,5],["NT-1783263217293","APTAMIL LIQUID","Dairy",0.0,40.0,26],["NT-1783270336314","AREON AIR FRESHENER","Household",0.0,35.0,3],["NT-1783282156750","AREON X AIR FRESHENER","Household",0.0,50.0,8],["NT-1783270546844","ARISE CONDOM","Personal Care",0.0,10.0,36],["NT-1783189108945","ASHFORD BRUSH Adults","Personal Care",0.0,10.0,6],["NT-1783185289346","ASHFORD KIDS BRUSH","Personal Care",0.0,10.0,34],["NT-1783171748291","ATHENA","Personal Care",0.0,10.0,12],["NT-1783198392281","AVENA BODY WASH","Personal Care",0.0,100.0,11],["NT-1783170578182","AVRIL SOAP b/s","Personal Care",0.0,10.0,8],["NT-1783171473408","AVRIL SOAP s/s","Personal Care",0.0,8.0,13],["NT-1783173865199","AZZURA BATH","Personal Care",0.0,100.0,61],["NT-1783104039246","BADIA SEASON","General",0.0,30.0,9],["5011013100118","BAILEYS - 1litre","Beverages",329.0,550.0,0],["5011013100217","BAILEYS - 20cl","Beverages",72.0,140.0,1],["5011013100156","BAILEYS - 70cl","Beverages",274.0,450.0,2],["NT-1783196235037","BEAUTY FAIR LOTION","Personal Care",0.0,100.0,1],["5000329002278","BEEFEATER","Beverages",285.0,450.0,2],["NT-1783091456361","BEL AQUA m/s","Beverages",0.0,5.0,0],["6034000181036","BEL AQUA s/s","Beverages",1.8,3.0,15],["NT-1784651474351","bel-cola","General",42.0,45.0,0],["6034000351101","BEL-COLA","Beverages",2.6,5.0,30],["813497004310","BELAIRE","Beverages",760.0,850.0,1],["NT-1783172067798","BELLA COCOA BUTTER s/s","Personal Care",0.0,45.0,1],["NT-1783192445020","BERRIES WEEKEND PERFUME","Personal Care",0.0,350.0,2],["NT-1785262558953","BERTENG WS","General",25.0,30.0,2],["NT-1783086625334","BIGOO","Beverages",0.0,5.0,23],["NT-1783281569871","BIRCH","Household",0.0,130.0,6],["NT-1783156318408","BISCOFF","Snacks",0.0,55.0,1],["NT-1783197841931","BISMID SHOWER GEL","Personal Care",0.0,100.0,2],["50196838","BLACK & WHITE - 20cl","Beverages",50.0,70.0,19],["50196111","BLACK & WHITE -70cl","Beverages",164.5,200.0,6],["5000267125046","BLACK LABEL - 1litre","Beverages",545.0,730.0,1],["5000267171654","BLACK LABEL - 20cl","Beverages",122.0,150.0,0],["NT-1783192266825","BLACK LEATHER PERFUME","Personal Care",0.0,350.0,1],["5000267190556","BLONDE WHISKY","Beverages",305.0,400.0,0],["608938861252","BLUE JEANS","Beverages",18.7,30.0,11],["5000267114279","BLUE LABEL","Beverages",2850.0,4000.0,1],["NT-1783193288710","BLUE STONE PERFUME","Personal Care",0.0,350.0,1],["NT-1783102768360","BONITA OIL 2ltr","General",0.0,105.0,5],["NT-1783103531235","BORGES OIL 250ml","General",0.0,90.0,3],["NT-1783103478518","BORGES OIL 500ml","General",0.0,150.0,6],["NT-1783188161899","BRAND BARMMIE SHOWER GEL","Personal Care",0.0,100.0,3],["NT-1783162625819","BREAD ROLL","Snacks",0.0,5.0,0],["6036000014307","BROWN GOLD","General",48.0,65.0,9],["NT-1783190952299","BROWN ORCHID","Personal Care",0.0,300.0,2],["NT-1783104822422","BROWN SUGAR s/s","General",0.0,25.0,10],["5014379025385","BUDWEISER","Beverages",18.8,30.0,2],["5032619233543","BULLET","Beverages",18.0,25.0,22],["NT-1783270085890","CALIFORNIA AIR FRESHENER","Household",0.0,45.0,8],["NT-1783174445622","CAMEL ANTISEPTIC  125ml","Personal Care",0.0,25.0,8],["8000040000802","CAMPARI - 1litre","Beverages",125.0,195.0,2],["5449000000996","CAN COKE","Beverages",7.5,15.0,29],["6034000106893","CAN MALT","Beverages",10.4,16.0,16],["NT-1785261345245","CAN MALT WS","General",250.0,260.0,10],["NT-1783190572421","CANALE DI BLUE PERFUME","Personal Care",0.0,250.0,1],["NT-1783175521200","CAPITANO MOUTHWASH","Personal Care",0.0,50.0,10],["04050035389500","CAPRISUN","Beverages",9.7,13.0,10],["6034000449853","CAPTAIN MORGAN - 1litre","Beverages",250.0,350.0,3],["6034000449860","CAPTAIN MORGAN - 20cl","Beverages",58.0,70.0,3],["NT-1783267683852","CAR BHOUSE","Household",0.0,150.0,9],["NT-1783171563027","CARBOLIC SOAP","Personal Care",0.0,8.0,111],["NT-1783192526453","CARBON BLACK","Personal Care",0.0,250.0,1],["NT-1783198985385","CARES BODY WASH","Personal Care",0.0,150.0,1],["NT-1783145330577","CARNATION MILK s/s","Dairy",0.0,12.0,132],["NT-1783147223585","CARNATION MILK sachet","Dairy",0.0,25.0,12],["6034000083446","CARNIVAL STRAWBERRY","Beverages",45.0,60.0,13],["5601096013551","CASAL GARCIA","Beverages",100.0,160.0,4],["5604414106409","CEDRO WINE","Beverages",18.0,30.0,14],["NT-1783440300167","CERELAC 1KG","General",0.0,220.0,2],["NT-1783146716742","CERELAC SACHET","Dairy",0.0,60.0,7],["NT-1783146904823","CERELAC TIN s/s","Dairy",0.0,65.0,9],["6001240100011","CERES - 1litre","Beverages",30.0,50.0,15],["NT-1783439955327","CERES 50ML","General",0.0,12.0,0],["6976214121371","CFA KING SARDINE","General",12.5,15.0,30],["NT-1783259604285","CHASE DEER SHIRT","Clothing",0.0,60.0,2],["NT-1783259676865","CHASE DEER SINGLET","Clothing",0.0,45.0,7],["NT-1783189677031","CHEEK PERFUME","Personal Care",0.0,250.0,1],["NT-1783164040818","CHEESE CRACKER","Snacks",0.0,45.0,7],["NT-1783158710710","CHEK CHEK PLANTAIN CHIPS s/s","Snacks",0.0,25.0,2],["NT-1783159088524","CHEK CHEK PLANTAIN m/s","Snacks",0.0,45.0,2],["NT-1783158554908","CHEK-CHEK PLANTAIN CHIPS L/s","Snacks",0.0,75.0,4],["NT-1783173723530","CHILLY WIPE","Personal Care",0.0,60.0,9],["NT-1786741238865","chinchin","General",8.0,10.0,2],["NT-1783167063645","CHIPS","Snacks",0.0,25.0,23],["NT-1783166878620","CHIPS","Snacks",0.0,30.0,29],["NT-1783166836823","CHIPS","Snacks",0.0,10.0,9],["NT-1783164782133","CHOCO RING","Snacks",0.0,5.0,19],["NT-1784653796508","CIC MIMO","General",680.0,750.0,5],["NT-1783194559896","CIEN / ISANA ROLL ON","Personal Care",0.0,45.0,7],["NT-1783194077796","CIEN DEODORANT","Personal Care",0.0,60.0,12],["NT-1783098387338","CLEAR FOODS GREEN TEA","General",0.0,35.0,5],["6001299015274","CLOVER MILK","Beverages",25.0,45.0,2],["NT-1789418768910","Coconut Crunch","General",18.0,25.0,7],["NT-1783165628725","COCONUT PEANUT s/s","Snacks",0.0,85.0,11],["5449000000439","COKE - 1.5litres","Beverages",25.0,35.0,20],["NT-1783440643037","COKE M/S","General",9.0,13.0,67],["90338052","COKE S/S","Beverages",5.0,10.0,30],["330","COKE ZERO can","Beverages",12.5,20.0,17],["NT-1783183852931","COLGATE KIDS 4 in 1","Personal Care",0.0,35.0,3],["NT-1783188359073","COMFORT AFTER WASH 4ltr","Household",0.0,260.0,0],["NT-1783188616616","COMFORT AFTER WASH 990ml","Household",0.0,80.0,2],["80022251","CONAD KETCHUP","General",50.0,60.0,1],["7791540046216","CONDOR PEAK","Beverages",67.0,140.0,11],["NT-1783194233928","CONET ROLL ON","Personal Care",0.0,35.0,8],["NT-1783156150800","COOKIE BITE","Snacks",0.0,20.0,3],["NT-1783166737601","COOKIES","Snacks",8.0,10.0,2],["NT-1783167260678","COOKIES","Snacks",0.0,25.0,1],["NT-1785261457139","COOL VOLTIC","General",10.0,12.0,7],["6111070000181","COSTA SARDINE","General",12.5,15.0,4],["NT-1783169233295","COTTON TOWEL 140cm","Personal Care",0.0,100.0,1],["NT-1783169085651","COTTON TOWEL 145cm","Personal Care",0.0,150.0,2],["NT-1783168988807","COTTON TOWEL 152cm","Personal Care",0.0,200.0,3],["NT-1783168295559","COTTON TOWEL 170cm","Personal Care",0.0,250.0,3],["NT-1783169309724","COTTON TOWEL 90cm","Personal Care",0.0,70.0,10],["NT-1783169403936","COTTON TOWEL 95cm","Personal Care",0.0,80.0,0],["NT-1783157424599","CREAMS","Snacks",0.0,25.0,1],["NT-1789419144629","CREMO Biscuit","General",8.0,15.0,11],["NT-1783175258323","CREST COMPLETE","Personal Care",0.0,60.0,5],["8410702053938","CRUZARES","Beverages",75.0,150.0,15],["NT-1783257745265","CRYSTAL CLEAR HAND WASH 1ltr","Personal Care",0.0,35.0,3],["NT-1783199405565","CRYSTAL CLEAR HAND WASH 450ml","Personal Care",0.0,25.0,4],["NT-1783166486600","Cup CAKE","Snacks",8.0,10.0,8],["NT-1783193201587","CUSSONS JELLY","Personal Care",0.0,25.0,5],["NT-1783156011189","DA VINCI SCOTCHBREAD","Snacks",0.0,60.0,6],["NT-1783155924760","DA VINCI SCOTTIES","Snacks",0.0,45.0,1],["4100290099800","DANO MILK - 1litre","Beverages",33.0,55.0,13],["NT-1783104575273","DATE SYRUP 250ml","General",0.0,75.0,1],["NT-1783271364949","DAVIDE AIR FRESHENER","Household",0.0,40.0,2],["NT-1783331545067","DENTAL FLOSS","Personal Care",0.0,15.0,17],["NT-1783170790550","DETTOL SOAP","Personal Care",0.0,25.0,20],["NT-1783195561543","DIAMOND GLOW LOTION","Personal Care",0.0,150.0,1],["NT-1783096745706","DIORA RICE 5kg","General",0.0,80.0,3],["6186000787210","DOLAIT 200G","General",12.0,15.0,1],["6186000787579","DOLAIT 500G","General",27.0,30.0,5],["6186000787012","DOLAIT DODOCHOU","General",3.5,5.0,5],["NT-1783196907870","DOMINION BODY CREAM","Personal Care",0.0,100.0,2],["8410261031187","DON GARCIA","Beverages",35.0,45.0,2],["8410261627120","DON SIMON - 500ml","Beverages",15.5,25.0,10],["8410261607108","DON SIMON 1LR","Beverages",30.0,45.0,7],["088076177703","DOUBLE BLACK","Beverages",600.0,850.0,6],["NT-1783175698018","DOVE DEO STICK","Personal Care",0.0,60.0,0],["NT-1783193811567","DOVE DEODORANT","Personal Care",0.0,45.0,39],["NT-1783194326033","DOVE ROLL ON","Personal Care",0.0,35.0,5],["NT-1789424601760","DOVE SHOWER GEL","General",67.0,100.0,12],["NT-1783089065459","DR MALT","Beverages",8.5,15.0,0],["NT-1783175325245","DR X","General",0.0,10.0,24],["NT-1783282373692","DURACELL","Electronics",0.0,60.0,9],["NT-1783268531433","DUREX LUBRICANT","Personal Care",0.0,100.0,0],["NT-1783185702555","EASY ON","Personal Care",0.0,45.0,5],["NT-1783270629640","EBONY CONDOM","Personal Care",0.0,10.0,3],["NT-1783188898710","ELEMENT LADY","Personal Care",0.0,60.0,5],["NT-1784664513285","ELEPHANT T ROLL","General",21.0,30.0,4],["NT-1783191616664","EMERGENCY PERFUME","Personal Care",0.0,60.0,3],["NT-1783282703040","ENERGIZER 9V1","Electronics",0.0,60.0,10],["NT-1783283662057","ENERGIZER AA4","Electronics",0.0,50.0,2],["NT-1783283543338","ENERGIZER AAA2","Electronics",0.0,30.0,4],["NT-1783283176804","ENERGIZER AAA4","Electronics",0.0,50.0,15],["NT-1783283013989","ENERGIZER AAA6","Electronics",0.0,60.0,0],["NT-1783282540077","ENERGIZER C2","Electronics",0.0,50.0,6],["NT-1783282812047","ENERGIZER D2","Electronics",0.0,60.0,5],["NT-1783264216010","ENFAMIL","Dairy",0.0,750.0,2],["070074671093","ENSURE MILK","Beverages",35.4,50.0,8],["NT-1783284292056","ENVELOPE","General",0.0,5.0,100],["NT-1783189488989","ESCANDEL KING","Personal Care",0.0,250.0,1],["NT-1783170389041","EUTHYMOL","Personal Care",0.0,65.0,1],["NT-1783197107261","EVERSHEEN CREAM L/s","Personal Care",0.0,45.0,13],["NT-1783197049452","EVERSHEEN CREAM s/s","Personal Care",0.0,25.0,16],["NT-1783197261991","EVERSHEEN LOTION 500ml","Personal Care",0.0,40.0,6],["NT-1783197199496","EVERSHEEN LOTION 750ml","Personal Care",0.0,50.0,4],["NT-1783189011131","EXECUTIVE BRUSH","Personal Care",0.0,10.0,6],["NT-1783195996645","EXECUTIVE WHITE LOTION","Personal Care",0.0,120.0,1],["7899567246784","EXETER CORNED BEEF b/s","General",39.5,65.0,7],["NT-1783190320936","EXPLORE CLUB PERFUME","Personal Care",0.0,250.0,1],["NT-1783189564442","EXPLORE The One","Personal Care",0.0,300.0,1],["NT-1783195910180","F L LOTION","Personal Care",0.0,150.0,1],["NT-1783285772982","FAN CHOCO","Snacks",4.0,6.0,39],["NT-1783285868072","FAN ICE","Snacks",4.0,6.0,17],["NT-1783286044720","FAN ICE 150ml","Snacks",0.0,8.0,14],["NT-1783286556405","FAN ICE 1ltr","Snacks",0.0,45.0,2],["NT-1783286240797","FAN ICE 250ml","Snacks",0.0,15.0,36],["NT-1783286698580","FAN ICE 2ltr","Snacks",0.0,75.0,2],["NT-1783286408633","FAN ICE 500ml","Snacks",0.0,30.0,37],["NT-1783285652605","FAN YOGO","Snacks",4.0,6.0,59],["NT-1783439955111","FANMAXX","General",0.0,15.0,10],["NT-1783286811940","FANTASY ICE CREAM","Snacks",0.0,10.0,0],["NT-1783286972792","FANTASY PEANUT","Snacks",0.0,12.0,0],["5036601995105","FARMFOODS SARDINE","General",18.5,25.0,35],["5741000137017","FAXE - 330ml","Beverages",11.5,20.0,22],["NT-1783082864714","FAXE - 500ml","Beverages",0.0,30.0,0],["NT-1783194648828","FEEL ROLL ON","Personal Care",0.0,35.0,3],["NT-1783143386160","FESTIN TOMATO 2.2kg","General",0.0,120.0,2],["NT-1783103854964","FESTIVA SOY SAUCE","General",0.0,45.0,2],["8436015881181","FESTIVAL CHAMPAGNE","Beverages",34.0,60.0,17],["NT-1783270925240","FLAVOURS CONDOM","Personal Care",0.0,25.0,1],["6111242420038","FOUNTY SARDINE","General",12.4,16.0,36],["6034000345070","FOUR SPECIAL","Beverages",90.0,140.0,1],["8008920034602","FRAGOLINO","Beverages",80.0,140.0,2],["NT-1783188551380","FRAGRANCE SOFTENER","Household",0.0,250.0,2],["NT-1783287119188","FROSTY 150ml","Snacks",0.0,8.0,14],["NT-1783287220609","FROSTY 250ml","Snacks",0.0,15.0,0],["NT-1783287329659","FROSTY 550ml","Snacks",0.0,25.0,0],["NT-1783165142044","FRUIT SNACKS","Snacks",0.0,5.0,66],["6253500771428","FRUTELLI","Beverages",25.0,35.0,4],["NT-1783103209583","FRYTOL 4.5ltr","General",0.0,200.0,0],["NT-1783195454871","FUNBACT-A","Personal Care",0.0,15.0,4],["NT-1783262162500","GAREA","Dairy",0.0,40.0,12],["NT-1783170931920","GEISHA SOAP","Personal Care",0.0,15.0,32],["NT-1783195736795","GEN Z LOTION","Personal Care",0.0,150.0,1],["NT-1783172775494","GILLETTE SHAVE GEL","Personal Care",0.0,100.0,8],["NT-1783157647428","GINGER BISCUIT","Snacks",0.0,6.0,22],["NT-1783094171928","GINNY SARDINE","General",0.0,15.0,3],["NT-1783283852398","GLADE SENSATION","Household",0.0,25.0,2],["4008844400006","GOOD MORNING OAT","General",28.0,35.0,1],["8858701400191","GRACE SARDINE","General",8.0,12.0,4],["NT-1783148693306","GRANOLA b/s","General",149.0,180.0,10],["NT-1784664360413","GREEK YOGURT 1LR","General",90.0,100.0,1],["NT-1784664452865","GREEK YOGURT 500ML","General",50.0,60.0,0],["6034000106015","GUINNESS","Beverages",10.0,20.0,24],["NT-1783163764883","GUTLON DIGESTIVE","Snacks",0.0,65.0,0],["NT-1783272586734","HARPIC BLOCK","Household",0.0,45.0,10],["NT-1783258520004","HEAVEN INSECTICIDE","Household",0.0,55.0,2],["8712000030575","HEINEKEN bt","Beverages",20.8,30.0,35],["5000157024671","HEINZ BEANS b/s","General",17.5,25.0,27],["6290090017000","HEINZ BEANS s/s","General",10.4,15.0,186],["NT-1783264102840","HEINZ BT FOOD","General",13.0,16.0,28],["6221033001008","HEINZ KETCHUP","General",26.6,40.0,1],["3245990255215","HENNESSY","Beverages",755.0,980.0,0],["3245990001218","HENNESSY XO","Beverages",2850.0,4000.0,1],["NT-1783104351598","HERTFORD CORNED BEEF","General",0.0,65.0,24],["NT-1783197559458","HOTICE","Personal Care",0.0,150.0,3],["NT-1783173090270","HUGGIES WIPE","Personal Care",0.0,25.0,1],["NT-1783157530869","HUP SENG CRACKER","Snacks",0.0,25.0,25],["6033000684981","IDEAL MILK 150g","Dairy",9.0,15.0,72],["NT-1783145078887","IDEAL MILK 370g","Dairy",0.0,30.0,0],["NT-1783267082869","IKEDA","Household",0.0,150.0,8],["NT-1783098481388","IMPRACTICAL TEA","General",0.0,35.0,1],["NT-1783104195907","INDOMIE s/s","General",0.0,8.0,14],["NT-1783104241783","INDOMIE SUPERPACK","General",0.0,15.0,14],["NT-1783191391561","INTENSE MAN","Personal Care",0.0,350.0,1],["NT-1783172279629","IRISH GOLD","Personal Care",0.0,50.0,2],["NT-1783174718601","IRISH SPRING","Personal Care",0.0,20.0,13],["NT-1789418615173","Jack & Jill Biscuit","General",4.1,7.0,53],["082184090442","JACK DANIELS - 1litre","Beverages",480.0,550.0,3],["4067700027191","JAGERMEISTER - 1.75litres","Beverages",650.0,750.0,0],["4067700014535","JAGERMEISTER - 1litre","Beverages",360.0,550.0,3],["4067700031617","JAGERMEISTER - 20cl","Beverages",80.0,150.0,29],["4067700011022","JAGERMEISTER - 35cl","Beverages",110.0,210.0,5],["4067700013323","JAGERMEISTER - 70cl","Beverages",295.0,450.0,5],["NT-1783171100511","JAMAA SOAP","Personal Care",0.0,15.0,9],["NT-1783096839813","JASMINE RICE 25KG","General",0.0,450.0,1],["5010278104572","JIM BEAM","Beverages",650.0,850.0,6],["NT-1783198502210","JOHNSON BODY LOTION","Personal Care",0.0,70.0,3],["789049109607","JOJO","Beverages",9.5,15.0,13],["3263286301316","JP CHENET","Beverages",60.0,150.0,6],["3500610093708","JP CHENET GOLD","Beverages",80.0,180.0,3],["NT-1783170678752","JULIET SOAP","Personal Care",0.0,15.0,25],["NT-1783258192559","JUMBO SOAP","Personal Care",0.0,20.0,2],["8699025780053","JUSS 1LR","Beverages",19.0,40.0,5],["8698720868639","JUSS COOLER","Beverages",2.8,5.0,14],["8698720863535","JUSS PEACH","Beverages",21.0,40.0,2],["9501053210497","KALYPPO","Beverages",3.9,5.0,22],["NT-1783170285398","KEL KIDS","Personal Care",0.0,15.0,7],["NT-1783149306356","KELLOGS CORNFLAKES 1kg","General",0.0,130.0,2],["NT-1783264602948","KENDAMIL","Dairy",0.0,320.0,11],["NT-1783171368649","KEY SOAP","Personal Care",0.0,35.0,25],["NT-1783258359336","KILL IT INSECTICIDE","Household",0.0,50.0,3],["NT-1783098950537","KIMBO COFFEE","General",0.0,100.0,3],["NT-1783259331671","KING SIZE BEDSHEETS","Household",0.0,450.0,50],["5011826117006","KINGFISHER SARDINE","General",18.5,25.0,15],["NT-1783159580564","KINGSBITE 100g","Snacks",0.0,30.0,0],["NT-1783159670674","KINGSBITE 50g","Snacks",0.0,15.0,29],["NT-1786741952058","KINGSIZE BEDSHEET PLAIN","General",450.0,600.0,10],["4740019500004","KISS CAN","Beverages",22.0,30.0,26],["NT-1783096276883","KIVO PEPPER","General",0.0,25.0,3],["NT-1783189934008","KLEESOFT 2kg","Household",0.0,55.0,4],["NT-1784664256459","kleesoft 3kg","General",80.0,90.0,0],["NT-1783189841100","KLEESOFT 5kg","Household",0.0,130.0,2],["NT-1783171172110","KLEESOFT SOAP","Personal Care",0.0,8.0,7],["6971006991286","LA VONCE MACKEREL","General",15.8,20.0,20],["NT-1783264325953","LACTOGEN","Dairy",0.0,130.0,6],["NT-1783162485988","LADY VEE BREAD","Snacks",0.0,25.0,1],["8032738621310","LAMBORGHINI","Beverages",900.0,1200.0,1],["NT-1783266409353","LAMOSA MILK","Dairy",0.0,300.0,8],["7896860540274","LELE CORNED BEEF b/s","General",35.0,45.0,30],["7896860540281","LELE CORNED BEEF s/s","General",28.0,35.0,5],["NT-1783171883194","LIFEBUOY","Personal Care",0.0,20.0,12],["NT-1783198299176","LIFEBUOY SHOWER GEL","Personal Care",0.0,100.0,2],["NT-1783284550225","LIGHTER","General",0.0,10.0,2],["NT-1783185006318","LILY ROSE BRUSH","Personal Care",0.0,10.0,7],["5063305011619","LIPTON b/s","General",0.0,100.0,6],["8720608603534","LIPTON s/s","General",0.0,25.0,6],["NT-1783174247423","LISTERINE 250ml","Personal Care",0.0,65.0,2],["NT-1783174172436","LISTERINE 500ml","Personal Care",0.0,85.0,2],["NT-1785262338903","LOGOS PLANTAIN B/S","General",45.0,50.0,1],["NT-1785262483938","LOGOS PLANTAIN M/S","General",30.0,40.0,4],["NT-1785262527695","LOGOS PLANTAIN S/S","General",15.0,20.0,10],["NT-1783278596053","LORIS DIFFUSER","Household",0.0,130.0,6],["NT-1783267859833","LORIS ROOM SPRAY","Household",0.0,100.0,8],["5054267012752","LUCOZADE bottle","Beverages",18.0,25.0,17],["5054267001374","LUCOZADE CAN","Beverages",13.8,20.0,12],["NT-1783198207373","LUX SHOWER GEL","Personal Care",0.0,100.0,3],["NT-1783170508832","LUX SOAP","Personal Care",0.0,15.0,17],["NT-1783170861425","MABEL SOAP","Personal Care",0.0,15.0,18],["NT-1783171258222","MADAR SOAP","Personal Care",0.0,5.0,80],["NT-1783190122696","MADAR WASHING POWDER","Household",0.0,60.0,0],["NT-1783173947328","MALIZIA SHOWER GEL","Personal Care",0.0,100.0,40],["NT-1783169943870","MAMA YAZ TISSUE","Personal Care",0.0,40.0,12],["0854141000203","MAMA\u2019s CHOICE FUFU","General",0.0,100.0,17],["NT-1783196341360","MARQUE PERFUME","Personal Care",0.0,120.0,7],["04124498","MARTINELLIS","Beverages",26.6,40.0,32],["NT-1783285458851","MASHERITA","Snacks",0.0,2.0,14],["NT-1783284935446","MATCHES","Household",0.0,10.0,3],["NT-1783281980907","MAX LADY SHAVING","Personal Care",0.0,65.0,8],["NT-1783281759325","MAX SHAVING","Personal Care",0.0,65.0,5],["NT-1783163222518","MCVITIES DIGESTIVE 400g","Snacks",0.0,60.0,2],["NT-1783262832064","ME MILK","Dairy",0.0,45.0,0],["NT-1783170730187","MEDISOFT","Personal Care",0.0,20.0,2],["NT-1783172591030","MEDISOFT REPELLENT","Personal Care",0.0,15.0,4],["4002720006672","MELITTA COFFEE","General",98.0,120.0,4],["NT-1783266809666","MENTOS BLAST","Snacks",0.0,45.0,22],["NT-1783703397975","MENTOS ICE","General",7.0,10.0,60],["NT-1783285180879","MENTOS s/s","Snacks",0.0,1.0,178],["NT-1783147473315","MICROWAVE POPCORN","General",0.0,12.0,13],["NT-1783192767474","MIDNIGHT OUD","Personal Care",0.0,250.0,1],["NT-1783144695567","MILO 200g","General",0.0,25.0,33],["NT-1783144402344","MILO 400g","General",0.0,50.0,11],["NT-1783144246784","MILO 800g","General",65.0,80.0,25],["NT-1783144490203","MILO ALL IN 1","General",0.0,45.0,3],["6001299029950","MILO DRINK","Beverages",12.5,15.0,19],["9556001004543","MILO TIN 1.4kg","General",0.0,350.0,7],["8888082134170","MILO TIN 1.8kg","General",0.0,400.0,1],["6033000089199","MILO TIN 400g","General",46.0,60.0,17],["NT-1783162248177","MINI PARTY","Snacks",0.0,25.0,1],["NT-1783162346036","MINIMIE","Snacks",0.0,5.0,21],["NT-1783082385435","MIONETTO CHAMPAGNE","Beverages",100.0,160.0,0],["NT-1783261867005","MIRALAC","Dairy",0.0,80.0,1],["3185370729960","MOET","Beverages",680.0,800.0,1],["5060947546080","MONSTER","Beverages",25.4,30.0,7],["NT-1789425239058","MOSSE Washing Powder","General",1.0,2.0,45],["NT-1789418500561","Munchkins biscuit","General",4.5,8.0,10],["NT-1783158306261","NAFANA CASHEW L/s","Snacks",0.0,100.0,3],["NT-1783158397384","NAFANA CASHEW s/s","Snacks",0.0,80.0,15],["NT-1783264380040","NAN","Dairy",0.0,140.0,8],["NT-1783169559787","NAPKINS","Personal Care",0.0,10.0,35],["6001452301862","NEDERBURG","Beverages",165.0,200.0,4],["NT-1783146100679","NESCAF\u00c9 ALL IN 1","Dairy",0.0,45.0,2],["6181002001920","NESCAF\u00c9 CLASSIC","General",46.3,55.0,17],["8445291692749","NESCAF\u00c9 GOLD","General",75.0,100.0,5],["NT-1783173205847","NEW BABY WIPE","Personal Care",0.0,25.0,0],["NT-1783104755514","NEW LIFE HONEY 250ml","General",0.0,85.0,3],["4260587130057","NEXT LEVEL","General",18.0,25.0,10],["NT-1789420888914","NIDO 1+","General",98.0,140.0,12],["NT-1783146375222","NIDO 14g","Dairy",0.0,25.0,20],["NT-1783146480183","NIDO 23g","Dairy",33.5,45.0,9],["NT-1783143901846","NIDO ESSENTIAL 350g","Dairy",0.0,65.0,10],["NT-1783144044947","NIDO TIN 800g","Dairy",0.0,350.0,12],["085000005774","NIGHT TRAIN","Beverages",138.0,160.0,5],["NT-1783194743669","NIVEA BODY CREAM","Personal Care",0.0,70.0,12],["NT-1783193705243","NIVEA DEODORANT","Personal Care",0.0,75.0,17],["NT-1783194146972","NIVEA ROLLON","Personal Care",28.0,35.0,33],["NT-1783197946761","NIVEA SHOWER GEL 750ml","Personal Care",0.0,140.0,1],["NT-1783194827379","NIVEA VITAMIN C","Personal Care",0.0,90.0,12],["NT-1783165436331","NUTELLA 166g","Snacks",0.0,60.0,0],["NT-1783165353143","NUTELLA 276g","Snacks",0.0,100.0,0],["NT-1783260922864","NUTRIBOM","Dairy",0.0,45.0,6],["NT-1783164150396","NUTRISNAX","Snacks",0.0,10.0,34],["NT-1783104110486","OBA SPAGHETTI","General",0.0,10.0,14],["NT-1783095627175","OKEY SARDINE","General",12.5,15.0,19],["NT-1783103119586","OKI OIL 2ltr","General",0.0,105.0,9],["8902147012248","OLD ADMIRAL - 180ml","Beverages",65.0,80.0,6],["8902147012231","OLD ADMIRAL - 375ml","Beverages",45.0,60.0,1],["8902147012224","OLD ADMIRAL - 70cl","Beverages",80.0,150.0,1],["NT-1783147879682","OLIVE OIL s/s","General",0.0,500.0,2],["NT-1783192347740","ONIRO PERFUME","Personal Care",0.0,250.0,1],["NT-1783192833788","OPHYLLIA","Personal Care",0.0,300.0,1],["NT-1783170017078","ORAL B PASTE","Personal Care",0.0,30.0,11],["NT-1783162808227","OREO L/s","Snacks",0.0,30.0,5],["NT-1783162859356","OREO s/s","Snacks",0.0,16.0,13],["NT-1783162038759","ORIENT CHOCOLATE","Snacks",0.0,5.0,41],["6034000106411","ORIJIN BITTERS - 20cl","Beverages",18.0,25.0,5],["6034000106404","ORIJIN BITTERS - 75cl","Beverages",45.0,75.0,3],["NT-1783191040365","OUD DE ARABIA","Personal Care",0.0,350.0,1],["NT-1783192130165","OUD MADNESS","Personal Care",0.0,200.0,1],["7612100066232","OVALTINE","General",62.0,75.0,2],["NT-1783103607431","OYSTER SAUCE","General",0.0,65.0,5],["NT-1783198093163","PALM OLIVE SHOWER GEL 750ml","Personal Care",0.0,100.0,6],["NT-1783257841472","PALMOLIVE HAND WASH","Personal Care",0.0,50.0,3],["7896860540144","PAMPEANO CORNED BEEF","General",38.0,60.0,13],["3244851005297","PANACH\u00c9","Beverages",9.5,15.0,12],["NT-1783173521203","PANTY LINER","Personal Care",0.0,10.0,48],["NT-1783262354865","PASCUAL","Dairy",0.0,45.0,5],["NT-1783266979487","PEAK 123","Dairy",0.0,100.0,0],["NT-1783263377693","PEDIASURE","Dairy",35.0,50.0,14],["NT-1783174905658","PEPSODENT b/s","Personal Care",0.0,30.0,15],["NT-1783170201538","PEPSODENT CHARCOAL","Personal Care",0.0,25.0,9],["NT-1783175186962","PEPSODENT KIDS","Personal Care",0.0,10.0,12],["NT-1783185469520","PEPSODENT KIDS BRUSH","Personal Care",0.0,10.0,6],["NT-1783174965438","PEPSODENT s/s","Personal Care",0.0,20.0,33],["NT-1783196765778","PERFECT SKIN BODY CREAM","Personal Care",0.0,120.0,1],["NT-1789419595999","PERK BISCUIT B/S","General",4.1,10.0,18],["NT-1783157746077","PERK BISCUIT s/s","Snacks",3.0,5.0,30],["NT-1783102379937","PG TIPS","General",0.0,50.0,4],["NT-1783159346001","PICCADILLY","Snacks",0.0,15.0,0],["NT-1783166139196","PICCADILLY b/s","Snacks",0.0,60.0,7],["073030156009","PINK SALMON","General",38.0,45.0,4],["5000213019160","PLASTIC MALT","Beverages",9.2,15.0,14],["5000213019161","PLASTIC MALT - WS","General",110.0,150.0,1],["NT-1783283988598","POCKET TISSUE","Personal Care",0.0,3.0,104],["NT-1783145477773","POPULAR MILK","Dairy",0.0,12.0,19],["NT-1790094980592","POTATO CHIPS","General",8.0,10.0,4],["NT-1783157844290","POTATO CRACKER","Snacks",0.0,10.0,43],["NT-1789424177833","POWER HOUSE","General",28.0,35.0,6],["NT-1783438115698","PREMIUM NON DIARY","General",0.0,80.0,17],["NT-1783156437268","PRINGLES 165g","General",0.0,45.0,5],["NT-1783156649664","PRINGLES 40g","Snacks",0.0,25.0,1],["NT-1783156575024","PRINGLES 70g","Snacks",0.0,30.0,3],["NT-1783173346365","PROPA LADY","Personal Care",0.0,20.0,23],["NT-1783287527905","PROSTY ICE CREAM","Snacks",0.0,5.0,92],["NT-1783170115208","PUNCH & JUDY","Personal Care",0.0,30.0,6],["NT-1783104502225","PURE HONEY","General",0.0,85.0,0],["NT-1783104666970","PURE HONEY 350ml","General",0.0,75.0,2],["NT-1783278126518","PURE KLENZ SANITISER","Personal Care",0.0,25.0,3],["NT-1783263612214","PURITY m/s","Beverages",16.0,20.0,100],["NT-1783263685446","PURITY s/s","Beverages",0.0,16.0,23],["5000108478119","QUAKER OAT TIN 500g","General",35.0,50.0,5],["NT-1783148327035","QUAKER OATS 1.19kg","General",0.0,160.0,5],["NT-1783148168198","QUAKER OATS 4.52kg","General",0.0,350.0,1],["NT-1783197441755","QUEEN ELIZABETH lotion 800ml","Personal Care",0.0,60.0,2],["NT-1783192612551","QUEEN OF RED","Personal Care",0.0,250.0,1],["NT-1783271606956","RAIHAN AIR FRESHENER","Household",0.0,45.0,1],["9002490100070","RED BULL","Beverages",19.0,30.0,27],["857660004929","RED GEM WINE","Beverages",160.0,200.0,1],["5000267190143","RED LABEL - 1litre","Beverages",305.0,400.0,3],["5000267015200","RED LABEL - 20cl","Beverages",87.0,140.0,6],["5000267014203","RED LABEL - 70cl","Beverages",250.0,350.0,9],["NT-1783191769137","RED VALENTINE","Personal Care",0.0,80.0,1],["NT-1789492489447","REHOBOTH YOGHURT","General",18.0,22.0,4],["8710448562283","REMIA MAYONNAISE","General",28.0,45.0,3],["3024482295102","REMY MARTINS","Beverages",890.0,950.0,1],["NT-1783192937266","RESERVE","Personal Care",0.0,300.0,1],["NT-1783191530184","REVITALISE WOMEN","Personal Care",0.0,100.0,5],["NT-1783194000577","REXONA DEODORANT","Personal Care",0.0,45.0,4],["NT-1783105022472","RICE PUDDING","General",0.0,20.0,1],["NT-1783164962060","RICH IN CALCIUM s/s","Snacks",0.0,15.0,8],["NT-1783193518682","RIGHT GUARD","Personal Care",0.0,45.0,18],["NT-1783100739985","RIVOR CONTAINER 0.5kg","General",0.0,30.0,7],["NT-1783100794126","RIVOR CONTAINER 1kg","General",0.0,45.0,3],["NT-1783100598180","RIVOR SACHET 0.5kg","General",0.0,25.0,9],["NT-1785261641886","ROASTED CORN","General",5.0,10.0,19],["6002039005753","ROBERTSON WINERY","Beverages",100.0,160.0,3],["NT-1783091776199","ROOSTER RICE 25KG","General",0.0,450.0,1],["NT-1783190416379","ROSE SEDUCTION PERFUME","Personal Care",0.0,300.0,1],["9006033000117","ROX","Beverages",16.6,25.0,19],["NT-1784653937319","ROYAL UMBRELLA","General",680.0,750.0,3],["NT-1786741677594","ROYAL UMBRELLA","General",120.0,150.0,9],["5000382030935","RUBICON can","Beverages",12.5,20.0,19],["NT-1783176746482","SADOER MOUTHWASH","Personal Care",0.0,35.0,6],["6290090003003","SALAD CREAM","General",31.6,45.0,7],["732338515788","SANDY SHITO L/s","General",0.0,150.0,1],["732338515764","SANDY SHITO m/s","General",0.0,80.0,2],["6186000690237","SANGRIA 500ml","General",20.0,25.0,4],["6034300098577","SANTA SUGAR 1kg","General",26.0,30.0,2],["NT-1783171637915","SANTEX","Personal Care",0.0,20.0,1],["NT-1783084238911","SARGRIA b/s","Beverages",0.0,30.0,5],["NT-1783258835675","SASSO INSECTICIDE","Household",0.0,40.0,3],["6001108028044","SAVANNA","Beverages",21.6,25.0,1],["4025127093885","SCAVI & RAY","Beverages",56.0,70.0,9],["NT-1783148934261","SEFATA GARI","General",0.0,45.0,2],["NT-1783167153374","SHORTBREAD","Snacks",0.0,25.0,25],["NT-1783166582112","SHORTBREAD","Snacks",8.0,10.0,6],["NT-1783158152214","SHORTBREAD FINGERS","Snacks",0.0,60.0,13],["NT-1783264487687","SIMILAC","Dairy",0.0,1250.0,1],["NT-1783164261750","SIMPLY GOOD BISCUIT","Snacks",0.0,10.0,8],["NT-1783102527799","SKIPPY","General",0.0,250.0,1],["NT-1783166290426","SKY FLAKES","Snacks",0.0,180.0,0],["0721059007504","SKYY VODKA","Beverages",230.0,300.0,0],["NT-1783266255696","SMA","Dairy",0.0,250.0,2],["NT-1783186471033","SMAC BAGNO","Household",0.0,70.0,1],["6034000449242","SMIRNOFF CHOCOLATE 1ltr","General",93.0,180.0,1],["6034000449259","SMIRNOFF CHOCOLATE 20cl","General",44.0,70.0,15],["5410316442930","SMIRNOFF VODKA - 1litre","Beverages",320.0,450.0,6],["5410316233446","SMIRNOFF VODKA - 20cl","Beverages",45.0,70.0,29],["NT-1783159431564","SNICKERS","Snacks",0.0,18.0,10],["NT-1783164632231","SODA BISCUIT","General",0.0,3.0,198],["NT-1783281394745","SODIA DIFFUSER","Household",0.0,130.0,2],["NT-1783168105405","SOFTCARE L40","Personal Care",0.0,90.0,3],["NT-1784664588002","SOFTCARE M42","General",70.0,85.0,5],["NT-1783173423702","SOFTCARE PAD","Personal Care",0.0,15.0,20],["NT-1783167985372","SOFTCARE S48","Personal Care",0.0,75.0,2],["NT-1783172884302","SOFTCARE WIPES","Personal Care",0.0,25.0,12],["NT-1783149425545","SPANISH OIL 1litre","General",0.0,150.0,9],["NT-1783149056079","SPECIAL GARI","General",0.0,45.0,1],["NT-1783438783725","SPLENDA 100PCS","General",0.0,75.0,3],["NT-1783438591810","SPLENDA 50PCS","General",0.0,45.0,8],["NT-1783104915632","ST. LOUIS SUGAR s/s","General",0.0,20.0,1],["5410228141266","STELLA","Beverages",23.8,35.0,12],["NT-1783103300380","SUNFLOWER OIL 1ltr","General",0.0,50.0,31],["NT-1783102621963","SUNFLOWER OIL 5ltr","General",0.0,260.0,14],["NT-1783148510785","SUNNY BROWN SUGAR m/s","General",0.0,35.0,10],["6001299054068","SUPER M","Beverages",30.0,40.0,0],["NT-1783103716218","SUPERIOR SOY SAUCE","General",0.0,45.0,4],["NT-1783193914692","SURE DEODORANT","Personal Care",0.0,45.0,16],["951889950026","TAMPICO m/s","Beverages",5.0,10.0,17],["NT-1783172213240","TENDRINA s/s","Personal Care",0.0,30.0,5],["NT-1783101002359","TETLEY","General",0.0,45.0,9],["5000208001507","TETLEY DECAF","General",50.0,60.0,7],["NT-1783159239155","THE LAUGHING COW CHEESE","Snacks",0.0,25.0,3],["NT-1783197659116","THE LEGACY","Personal Care",0.0,150.0,1],["6111239500026","TITUS SARDINE","General",15.5,20.0,50],["NT-1783191141158","TOBACCO MYTH PERFUME","Personal Care",0.0,200.0,1],["NT-1783262539930","TOM MILK","Dairy",0.0,45.0,3],["6111070000310","TONOLI SARDINE","General",8.0,12.0,17],["NT-1783189269119","TOOMFORD PERFUME 50ml","Personal Care",0.0,100.0,1],["NT-1783157994381","TOWER GATE DIGESTIVE 400g","Snacks",0.0,60.0,6],["NT-1783266663567","TRIDENT","Snacks",0.0,25.0,25],["NT-1783163855845","TUC BISCUIT","Snacks",0.0,20.0,3],["6940345506352","TWINNINGS TEA","General",28.0,45.0,2],["NT-1783162943973","TWISS COOKIES","Snacks",0.0,80.0,2],["NT-1783163044112","TWISS SHORTBREAD 150g","Snacks",0.0,50.0,13],["NT-1783163101404","TWISS SHORTBREAD 300g","Snacks",0.0,80.0,3],["NT-1783192197899","UNIQUE PERFUME","Personal Care",0.0,300.0,2],["NT-1783172382520","VASELINE L/s","Personal Care",0.0,45.0,9],["NT-1783172521186","VASELINE LOTION","Personal Care",0.0,45.0,0],["NT-1789423884320","VASLINE S/S","General",11.0,25.0,2],["NT-1783091238711","VERNA","Beverages",0.0,3.0,131],["NT-1785261551664","VERNA WS","General",55.0,60.0,2],["NT-1783193083138","VICTORIA SECRET BODY SPLASH","Personal Care",0.0,170.0,6],["NT-1783278346562","VIOLA DIFFUSER","Household",0.0,90.0,7],["8851028003854","VITAMILK","Beverages",13.8,20.0,37],["NT-1783190012086","VIVA PLUS","Household",0.0,60.0,4],["4102610508177","VODY","Beverages",15.0,25.0,11],["6034000048001","VOLTIC L/s","Beverages",4.8,7.0,45],["6034000048018","VOLTIC M/S","Beverages",3.5,5.0,199],["NT-1789175850619","VOLTIC M/S- WS","General",27.0,40.0,20],["6034000048032","VOLTIC s/s","Beverages",1.7,3.0,263],["NT-1789175751588","VOLTIC S/S - WS","General",26.0,35.0,17],["NT-1783185987713","W5 POWERZONE","Personal Care",0.0,70.0,17],["NT-1783186171783","WC NET CLEANER","Personal Care",0.0,70.0,24],["041800429004","WELCH","Beverages",35.0,60.0,13],["041800317004","WELCH s/s","Beverages",14.5,25.0,1],["5021265223206","WELLMAN","Beverages",19.0,30.0,10],["NT-1783162138485","WERTHER\u2019S ORIGINAL","Snacks",0.0,30.0,1],["NT-1783088646673","WHEAT DRINK b/s","Beverages",0.0,20.0,0],["6154000233211","WHEAT DRINK s/s","Beverages",8.3,15.0,76],["NT-1783196157096","WHITE & BEAUTIFUL LOTION","Personal Care",0.0,100.0,1],["8902146010313","WHYTEHALL","Beverages",125.0,200.0,3],["NT-1783268162010","WIND AIRFRESHENER","Household",0.0,25.0,9],["NT-1783268258892","WIND AIRFRESHENER s/s","Household",0.0,20.0,4],["NT-1783175110421","WISDOM WHITENING","Personal Care",0.0,45.0,16],["4003310013759","WODKA GORBATSCHOW","Beverages",285.0,350.0,0],["NT-1783190788919","YARA LATTAFA PERFUME","Personal Care",0.0,350.0,1],["NT-1786742810270","YAZZ 5KG","General",116.0,150.0,14],["NT-1783185095786","YAZZ BRUSH","Personal Care",0.0,10.0,134],["NT-1783173271510","YAZZ PAD","Personal Care",0.0,20.0,138],["NT-1783172943825","YAZZ WIPE","Personal Care",0.0,25.0,7],["4100740208165","YBY","Beverages",100.0,160.0,3],["NT-1783262060210","YOGU+","Dairy",0.0,45.0,12],["6034000141467","YOMI","Beverages",15.0,20.0,2],["NT-1790094332863","ZET","General",1.0,3.0,193],["NT-1783266584802","ZET WS","Snacks",45.0,55.0,9],["NT-1783199227527","ZOE HAND WASH","Personal Care",0.0,25.0,14]];
+
+const {esc,money,T,add,upd,get,today,addDays,diffDays,fmtDate,badge,sum,pad,nowTime}=K;
+const r2=n=>Math.round(n*100)/100;
+const storeOf=id=>get('stores',id)||{name:'—'};
+const stockBadge=p=>p.stock<=0?badge('Out of stock','bad'):p.stock<=p.reorder?badge(p.stock+' left — low','warn'):badge(p.stock+' in stock','ok');
+const activeStoreId=()=>{
+  const u=K.user();
+  if(u&&u.role==='Cashier'&&u.storeId)return u.storeId;
+  return K.setting('activeStore')||(T('stores')[0]&&T('stores')[0].id);
+};
+// Real login credentials for the live handover.
+const OWNER_ACCOUNT={name:'RITA',username:'RITA',password:'Ritpack224'};
+const CATS=['General','Beverages','Personal Care','Household','Dairy','Snacks','Clothing','Electronics'];
+// Profit/gain in green, loss and expense/outflow figures in red — pass raw:true to
+// slot the colored HTML straight into K.strip (which otherwise escapes plain text).
+const pl=n=>'<span style="color:'+(n<0?'var(--bad)':'var(--ok)')+';font-weight:700">'+money(n)+'</span>';
+const out=n=>'<span style="color:var(--bad);font-weight:700">'+money(n)+'</span>';
+const receipt=s=>({title:s.method==='Credit'?'Credit invoice':'Sales receipt',meta:[['Receipt No.',s.ref],['Date',fmtDate(s.date)+' '+s.time],['Served by',s.cashier||'—']],
+  items:s.items.map(i=>({n:i.name,q:i.qty,p:money(i.price),t:money(i.qty*i.price)})),
+  totals:[['Total',money(s.total),1],[s.method,money(s.tendered)]].concat(s.method==='Cash'?[['Change',money(s.change)]]:[]),foot:s.voided?'VOIDED — not a valid receipt':'Thank you — come again'});
+const custOpts=()=>T('customers').map(c=>({v:c.id,l:c.name+(c.phone?' ('+c.phone+')':'')}));
+const suppOpts=()=>T('suppliers').map(s=>({v:s.id,l:s.name}));
+const custOf=id=>get('customers',id)||{name:'—',phone:''};
+const suppOf=id=>get('suppliers',id)||{name:'—',phone:''};
+
+const APP_CONFIG={
+ id:'ritpack',version:4,name:'Ritpack Supermarket',product:'Point of Sale',sender:'RITPACK',phone:'0242079913',location:'Bogobiri-Obuasi',
+ desktopName:'NYANSATEK POS',vendorName:'NYANSATEK',vendorPhone:'0536340578',logo:'data:image/png;base64,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',
+ ink:'#1a2e4a',accent:'#c0392b',accentInk:'#ffffff',smsBalance:0,edition:'Live installation',noReset:true,
+ navRoles:{settings:['Owner']},
+ tagline:'Fast checkout, live stock, cashiers and a full SME ledger — all on the shop’s own computer.',
+ auth:'credentials',
+ authenticate(username,password){
+  if(!username||!password)return null;
+  if(username===OWNER_ACCOUNT.username&&password===OWNER_ACCOUNT.password)return{name:OWNER_ACCOUNT.name,role:'Owner'};
+  const c=T('cashiers').find(c=>c.username===username&&c.password===password);
+  if(c&&c.status==='active')return{name:c.name,role:'Cashier',storeId:c.storeId};
+  return null;
+ },
+ roleHome:{Cashier:'till'},
+ nav:[
+  {id:'till',label:'Cashier',icon:'cart'},
+  {id:'inventory',label:'Admin Inventory',icon:'box',roles:['Owner']},
+  {id:'cashiers',label:'Cashiers',icon:'users',roles:['Owner']},
+  {id:'ledger',label:'SME Ledger',icon:'chart',roles:['Owner']}
+ ],
+
+ seed(K){
+  const STORES=[{id:'st1',name:'Ritpack Supermarket'},{id:'st2',name:'Branch 2'},{id:'st3',name:'Branch 3'}];
+  // Real, live migration: her actual 592-item catalogue, all currently at her one real
+  // location (Ritpack Supermarket / st1). Branch 2 and Branch 3 are separate, empty
+  // inventories reserved for future locations — a product created under one branch
+  // never appears in another; each branch's stock and catalogue stand on their own.
+  const products=RITPACK_STOCK.map((p,i)=>({id:'p'+(i+1),sku:'RS-'+pad(i+1,4),barcode:p[0],name:p[1],category:p[2],
+   cost:p[3],price:p[4],reorder:3,stock:p[5],storeId:'st1'}));
+
+  // No customers, suppliers, sales history or expenses are invented — these start empty
+  // and will fill in naturally as Ritpack Supermarket starts using the system.
+  const customers=[];
+  const suppliers=[];
+  const sales=[];
+  const stockMoves=[];
+  const supplies=[];
+  const creditInvoices=[];
+  const creditPayments=[];
+  const supplierPayments=[];
+  const expenses=[];
+
+  // Her two real, existing accounts carry over as-is so nobody has to re-learn a login.
+  const cashiers=[{id:'cs1',name:'Vera',username:'Vera',password:'Vera@RitPack',status:'active',storeId:'st1'}];
+
+  return{products,customers,suppliers,sales,cashiers,stockMoves,supplies,creditInvoices,creditPayments,supplierPayments,expenses,stores:STORES};
+ },
+
+ views:{
+  till(el){
+   const u=K.user();
+   const lockedToStore=u&&u.role==='Cashier'&&u.storeId;
+   K.till(el,{items:'products',sales:'sales',prefix:'S-',noun:'products',saleNoun:'sale',methods:['Cash','Mobile Money','Card','Credit'],showRecent:true,hideUntilSearch:true,noCategories:true,qtyPrompt:true,
+    catOf:p=>p.category,info:p=>({sub:p.sku}),
+    filter:p=>p.storeId===activeStoreId(),
+    storeField:lockedToStore?null:{opts:()=>T('stores').map(s=>({v:s.id,l:s.name})),value:activeStoreId,onChange:v=>{K.setting('activeStore',v);}},
+    storeLabel:lockedToStore?storeOf(u.storeId).name:null,
+    fields:[{k:'customer',l:'Customer',t:'select',opts:()=>[{v:'',l:'Walk-in customer'}].concat(custOpts())},{k:'phone',l:'SMS receipt to (optional)',t:'tel',ph:'0240000000'}],
+    validate:(cart,v,m)=>m==='Credit'&&!v.customer?'Choose a customer for a credit sale':null,
+    completeActions:[
+     {l:'Print & Complete',cls:'pri',autoPrint:true},
+     {l:'Send SMS & Complete',cls:'ok',require:'phone',requireMsg:'Enter a phone number to send the SMS receipt'},
+     {l:'Issue Credit Invoice',method:'Credit',style:'background:#7c3aed;color:#fff;border-color:#7c3aed'}
+    ],
+    onSale:s=>{
+     s.storeId=activeStoreId();
+     if(s.method==='Credit'){const c=get('customers',s.customer);if(c){c.balance=r2(c.balance+s.total);}}
+     K.save();
+     if(s.phone)K.sms(s.phone,K.receiptText(receipt(s)),'Receipt');
+    },
+    receipt});
+  },
+
+  inventory(el){
+   const curStore=()=>activeStoreId();
+   const storeProducts=()=>T('products').filter(p=>p.storeId===curStore());
+   el.innerHTML='<div class="bar"><select id="invstoresel" style="max-width:220px">'+T('stores').map(s=>'<option value="'+esc(s.id)+'"'+(s.id===curStore()?' selected':'')+'>'+esc(s.name)+'</option>').join('')+'</select>'+
+    '<button class="btn pri" data-act="add">+ Create product</button><button class="btn" data-act="recv">Record received supply</button><button class="btn" data-act="stores">Manage stores</button><span class="sp"></span></div>'+
+    '<p class="muted small" style="margin:6px 2px 0" id="invnote"></p><div id="invtabs" style="margin:10px 0"></div><div id="invbody"></div>';
+   const st={tab:0};
+   const TABS=['Current inventory','Received supply & history'];
+   const drawTabs=()=>{el.querySelector('#invtabs').innerHTML=K.chips(TABS,st.tab,'tab');};
+   const drawNote=()=>{el.querySelector('#invnote').textContent='Showing '+storeOf(curStore()).name+'’s own inventory — each branch keeps a separate stock list and catalogue.';};
+
+   const productForm=(row)=>K.formModal({title:(row?'Edit ':'Create ')+'product — '+storeOf(curStore()).name,fields:[
+     {k:'name',l:'Product name',req:1,w:'full'},{k:'barcode',l:'Barcode (optional)'},{k:'category',l:'Category',t:'select',opts:CATS,req:1},
+     {k:'price',l:'Selling price (GH₵)',t:'number',step:'0.01',req:1},{k:'cost',l:'Cost price (GH₵)',t:'number',step:'0.01',req:1},
+     {k:'stock',l:row?'Stock':'Opening stock',t:'number',min:0,def:0,req:1},
+     {k:'reorder',l:'Reorder level',t:'number',def:3,hint:'Shows as low stock at or below this number.'}],
+    values:row||{},
+    onSave:v=>{
+     if(row){upd('products',row.id,v);K.log('Updated product: '+v.name);}
+     else{v.sku=K.code('RS-','products','sku');v.storeId=curStore();add('products',v);K.log('New product: '+v.name+' — '+storeOf(curStore()).name);}
+     K.save();K.toast('Saved','ok');paintBody();
+    }});
+
+   const pickProductField=()=>({k:'productId',l:'Product',t:'pick',opts:()=>storeProducts().map(p=>({v:p.id,l:p.name+' ('+p.sku+')'})),req:1,w:'full'});
+
+   const openRecv=()=>K.formModal({title:'Record received supply — '+storeOf(curStore()).name,fields:[
+     pickProductField(),{k:'supplierId',l:'Supplier',t:'select',opts:suppOpts,req:1},{k:'reference',l:'Reference (optional)'},
+     {k:'qty',l:'Quantity received',t:'number',min:1,req:1},{k:'cost',l:'Cost price per unit (GH₵)',t:'number',step:'0.01',req:1}],
+    onSave:v=>{
+     const p=get('products',v.productId);if(!p||p.storeId!==curStore()){K.toast('Choose a product from this store','bad');return false;}
+     p.stock=(p.stock||0)+Number(v.qty);p.cost=Number(v.cost);K.save();
+     add('stockMoves',{date:today(),storeId:curStore(),productId:p.id,name:p.name,qty:Number(v.qty),note:'From '+suppOf(v.supplierId).name+(v.reference?' — '+v.reference:'')});
+     const n=T('supplies').length+1;add('supplies',{ref:'GR-'+pad(n,4),storeId:curStore(),supplierId:v.supplierId,reference:v.reference,date:today(),items:[{productId:p.id,name:p.name,qty:Number(v.qty),cost:Number(v.cost)}],total:r2(v.qty*v.cost)});
+     K.log('Received '+v.qty+' × '+p.name+' — '+storeOf(curStore()).name);K.toast('Stock updated','ok');paintBody();
+    }});
+   const openStores=()=>K.modal({title:'Manage stores',body:'<p class="muted small" style="margin:0 0 10px">Renaming a store does not move or merge its inventory — each keeps its own separate product list.</p>'+T('stores').map(s=>'<label class="fld full" style="margin-bottom:10px"><span>Store name</span><input data-store="'+s.id+'" value="'+esc(s.name)+'"></label>').join(''),
+    buttons:[{l:'Cancel'},{l:'Save',cls:'pri',fn:w=>{
+     w.querySelectorAll('[data-store]').forEach(inp=>{const s=get('stores',inp.dataset.store);if(s&&inp.value.trim())s.name=inp.value.trim();});
+     K.save();K.log('Renamed stores');K.toast('Stores updated','ok');paintBody();drawNote();
+     const sel=el.querySelector('#invstoresel');if(sel)sel.innerHTML=T('stores').map(s=>'<option value="'+esc(s.id)+'"'+(s.id===curStore()?' selected':'')+'>'+esc(s.name)+'</option>').join('');
+    }}]});
+
+   const paintBody=()=>{
+    const body=el.querySelector('#invbody');
+    if(st.tab===0){
+     body.innerHTML='<div class="card tc" id="invtab0"></div>';
+     K.crud(body.querySelector('#invtab0'),{table:'products',noun:'product',noAdd:true,search:['name','sku','barcode','category'],searchPh:'Search '+storeOf(curStore()).name+'’s inventory…',sort:(a,b)=>a.name.localeCompare(b.name),
+      filter:p=>p.storeId===curStore(),
+      chips:[{l:'All'},{l:'Low stock',fn:p=>p.stock>0&&p.stock<=p.reorder},{l:'Out of stock',fn:p=>p.stock<=0}],
+      cols:[{l:'Product',f:p=>'<b>'+esc(p.name)+'</b><span class="sub2">'+esc(p.sku)+(p.barcode?' · '+esc(p.barcode):'')+'</span>'},{l:'Category',k:'category'},
+       {l:'Cost',cls:'num',f:p=>money(p.cost)},{l:'Sell',cls:'num',f:p=>money(p.price)},{l:'Profit',cls:'num',f:p=>pl(r2(p.price-p.cost))},
+       {l:'Stock',f:stockBadge}],
+      fields:(row)=>[{k:'name',l:'Product name',req:1,w:'full'},{k:'barcode',l:'Barcode (optional)'},{k:'category',l:'Category',t:'select',opts:CATS,req:1},
+       {k:'price',l:'Selling price (GH₵)',t:'number',step:'0.01',req:1},{k:'cost',l:'Cost price (GH₵)',t:'number',step:'0.01',req:1},{k:'stock',l:'Stock',t:'number',min:0,req:1},{k:'reorder',l:'Reorder level',t:'number',req:1}],
+      actions:[{a:'recv',l:'Receive',fn:p=>K.formModal({title:'Received supply — '+p.name,fields:[{k:'supplierId',l:'Supplier',t:'select',opts:suppOpts,req:1},{k:'reference',l:'Reference (optional)'},{k:'qty',l:'Quantity',t:'number',min:1,req:1},{k:'cost',l:'Cost per unit (GH₵)',t:'number',step:'0.01',req:1,def:p.cost}],
+        onSave:v=>{p.stock=(p.stock||0)+Number(v.qty);p.cost=Number(v.cost);K.save();
+         add('stockMoves',{date:today(),storeId:curStore(),productId:p.id,name:p.name,qty:Number(v.qty),note:'From '+suppOf(v.supplierId).name});
+         const n=T('supplies').length+1;add('supplies',{ref:'GR-'+pad(n,4),storeId:curStore(),supplierId:v.supplierId,reference:v.reference,date:today(),items:[{productId:p.id,name:p.name,qty:Number(v.qty),cost:Number(v.cost)}],total:r2(v.qty*v.cost)});
+         K.toast('Stock updated','ok');paintBody();}})}]});
+    }else{
+     const moves=T('stockMoves').filter(m=>m.storeId===curStore());
+     body.innerHTML='<div class="card" style="margin-bottom:16px"><h3>Recent stock movements — '+esc(storeOf(curStore()).name)+'</h3><div id="mvlist"></div></div>'+
+      '<div class="card" id="mvhist"></div>';
+     body.querySelector('#mvlist').innerHTML=K.list(moves.slice(-6).reverse().map(m=>({t:m.name,s:'Received · '+m.note,r:m.qty+' units'})),'No movements yet');
+     K.crud(body.querySelector('#mvhist'),{table:'stockMoves',noun:'movement',noAdd:true,noEdit:true,noDelete:true,search:['name','note'],searchPh:'Search history…',range:{key:'date',def:'month'},sort:(a,b)=>b.date.localeCompare(a.date),
+      filter:m=>m.storeId===curStore(),
+      cols:[{l:'Date',f:m=>fmtDate(m.date)},{l:'Product',k:'name'},{l:'Received',cls:'num',k:'qty'},{l:'Note',k:'note'}]});
+    }
+   };
+   drawTabs();drawNote();paintBody();
+   el.querySelector('#invtabs').onclick=e=>{const b=e.target.closest('[data-act=tab]');if(b){st.tab=+b.dataset.id;drawTabs();paintBody();}};
+   el.querySelector('.bar').onclick=e=>{if(e.target.closest('[data-act=add]'))productForm(null);else if(e.target.closest('[data-act=recv]'))openRecv();else if(e.target.closest('[data-act=stores]'))openStores();};
+   el.querySelector('#invstoresel').onchange=e=>{K.setting('activeStore',e.target.value);drawNote();paintBody();};
+  },
+
+  cashiers(el){
+   K.crud(el,{table:'cashiers',noun:'cashier',addLabel:'Create cashier',search:['name','username'],sort:(a,b)=>a.name.localeCompare(b.name),
+    cols:[{l:'Name',k:'name'},{l:'Username',f:c=>'<code>'+esc(c.username)+'</code>'},{l:'Store',f:c=>storeOf(c.storeId).name},{l:'Status',f:c=>badge(c.status==='active'?'Active':'Suspended',c.status==='active'?'ok':'mute')}],
+    fields:(row)=>[{k:'name',l:'Cashier full name',req:1,w:'full'},{k:'username',l:'Staff username (used to log in)',req:1},
+     {k:'storeId',l:'Assigned store',t:'select',opts:()=>T('stores').map(s=>({v:s.id,l:s.name})),blank:false,hint:'The Till will show and sell only this store’s own inventory while she is signed in.'},
+     {k:'newPassword',l:row?'New password (leave blank to keep the current one)':'Set a password',t:'password',hint:row?'Blank by default so it never shows an existing password on screen. Only fill this in if you want to change it.':'Tell the cashier this password — it will not be shown on screen again after you save.'},
+     {k:'status',l:'Status',t:'select',opts:[{v:'active',l:'Active'},{v:'suspended',l:'Suspended'}],blank:false}],
+    defaults:()=>({status:'active'}),
+    validate:(v,row)=>{
+     if(v.username&&T('cashiers').some(c=>c.username.toLowerCase()===v.username.toLowerCase()&&(!row||c.id!==row.id)))return 'That username is already taken';
+     if(!row&&!v.newPassword)return 'Set a password for this cashier';
+     if(v.newPassword&&v.newPassword.length<6)return 'Password should be at least 6 characters';
+     return null;
+    },
+    before:(v,row)=>{v.password=v.newPassword?v.newPassword:(row?row.password:'');delete v.newPassword;return v;},
+    actions:[{a:'tog',l:'Suspend / Activate',fn:(c,paint)=>{c.status=c.status==='active'?'suspended':'active';K.save();K.log((c.status==='active'?'Activated':'Suspended')+' cashier '+c.name);paint();}}]});
+  },
+
+  ledger(el){
+   el.innerHTML='<h3 style="margin:0 0 10px">SME Financial Tracker</h3><div id="ltabs"></div><div id="lbody" style="margin-top:12px"></div>';
+   const st={tab:0,from:addDays(today(),-6),to:today()};
+   const TABS=['Sales history','Profit report','Credit sales','Credit payments','Supplier invoices','Supplier payments','Income statement','Void / return sale'];
+   const drawTabs=()=>{el.querySelector('#ltabs').innerHTML=K.chips(TABS,st.tab,'tab');};
+   const inRange=s=>s.date>=st.from&&s.date<=st.to;
+   const dateBar=()=>'<div class="bar" style="margin-bottom:12px"><label class="fld"><span>Start date</span><input type="date" id="lf_from" value="'+st.from+'"></label><label class="fld"><span>End date</span><input type="date" id="lf_to" value="'+st.to+'"></label><span class="sp"></span><button class="btn pri" data-act="extract">Extract</button></div>';
+
+   const paint=()=>{
+    const body=el.querySelector('#lbody');
+    if(st.tab===0){
+     const rows=T('sales').filter(inRange).sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+     body.innerHTML=dateBar()+'<div class="card tc">'+K.table([
+      {l:'Receipt',f:s=>'<b>'+esc(s.ref)+'</b><span class="sub2">'+fmtDate(s.date)+' '+esc(s.time)+'</span>'},
+      {l:'Items',f:s=>esc(s.items.map(i=>i.qty+' × '+i.name).join(', ').slice(0,60))},{l:'Cashier',k:'cashier'},{l:'Branch',f:s=>storeOf(s.storeId).name},
+      {l:'Payment',f:s=>badge(s.method,s.method==='Credit'?'warn':'mute')},{l:'Total',cls:'num',f:s=>money(s.total)},
+      {l:'Status',f:s=>s.voided?badge('Voided','bad'):badge('Completed','ok')}
+     ],rows,{empty:'No sales in this range'})+'</div>'+
+      '<div class="card" style="margin-top:12px">'+K.strip([['Sales',money(sum(rows.filter(s=>!s.voided),s=>s.total))],['Transactions',rows.filter(s=>!s.voided).length],['Average sale',money(rows.length?sum(rows.filter(s=>!s.voided),s=>s.total)/Math.max(1,rows.filter(s=>!s.voided).length):0)]])+'</div>';
+    }else if(st.tab===1){
+     const rows=T('sales').filter(inRange).filter(s=>!s.voided);
+     const rev=sum(rows,s=>s.total);
+     const cogs=sum(rows,s=>sum(s.items,i=>{const p=get('products',i.id);return(p?p.cost:0)*i.qty;}));
+     const profit=r2(rev-cogs);
+     const qty={};rows.forEach(s=>s.items.forEach(i=>{qty[i.name]=(qty[i.name]||0)+i.qty;}));
+     const top=Object.keys(qty).sort((a,b)=>qty[b]-qty[a]).slice(0,8).map(n=>({t:n,s:qty[n]+' units sold',r:''}));
+     const marginPct=rev?Math.round(profit/rev*100):0;
+     body.innerHTML=dateBar()+'<div class="card">'+K.strip([['Revenue',money(rev)],['Cost of goods sold',out(cogs),'raw'],['Gross profit',pl(profit),'raw'],['Margin','<span style="color:'+(marginPct<0?'var(--bad)':'var(--ok)')+';font-weight:700">'+marginPct+'%</span>','raw']])+'</div>'+
+      '<div class="card" style="margin-top:12px"><h3>Top sellers in range</h3>'+K.list(top,'No sales in this range')+'</div>';
+    }else if(st.tab===2){
+     const rows=T('customers').filter(c=>c.balance>0).sort((a,b)=>b.balance-a.balance);
+     body.innerHTML='<div class="bar"><span class="sp"></span><button class="btn pri" data-act="newinv">Issue new credit invoice</button></div>'+
+      '<div class="card tc">'+K.table([{l:'Customer',f:c=>'<b>'+esc(c.name)+'</b><span class="sub2">'+esc(c.phone)+'</span>'},{l:'Owes',cls:'num',f:c=>badge(money(c.balance),'warn')}],rows,{empty:'No outstanding credit sales'})+'</div>'+
+      '<div class="card" style="margin-top:12px"><h3>Credit invoices issued</h3>'+K.table([{l:'Ref',k:'ref'},{l:'Customer',f:i=>custOf(i.customerId).name},{l:'Date',f:i=>fmtDate(i.date)},{l:'Note',k:'note'},{l:'Amount',cls:'num',f:i=>money(i.amount)}],T('creditInvoices').slice().reverse(),{empty:'None yet'})+'</div>';
+    }else if(st.tab===3){
+     const owing=T('customers').filter(c=>c.balance>0);
+     body.innerHTML='<div class="bar"><span class="sp"></span><button class="btn pri" data-act="recvpay">Receive credit payment</button></div>'+
+      '<div class="card tc">'+K.table([{l:'Date',f:p=>fmtDate(p.date)},{l:'Customer',f:p=>custOf(p.customerId).name},{l:'Method',k:'method'},{l:'Amount',cls:'num',f:p=>money(p.amount)}],T('creditPayments').slice().reverse(),{empty:'No credit payments recorded'})+'</div>'+
+      (owing.length?'':'<p class="muted small" style="margin-top:8px">No customers currently owe a balance.</p>');
+    }else if(st.tab===4){
+     body.innerHTML='<div class="bar"><span class="sp"></span><button class="btn pri" data-act="newsinv">Record supplier invoice</button></div>'+
+      '<div class="card tc">'+K.table([{l:'Ref',k:'ref'},{l:'Supplier',f:s=>suppOf(s.supplierId).name},{l:'Reference',k:'reference'},{l:'Date',f:s=>fmtDate(s.date)},{l:'Amount',cls:'num',f:s=>out(s.total)}],T('supplies').slice().reverse(),{empty:'No supplier invoices yet'})+'</div>'+
+      '<div class="card" style="margin-top:12px"><h3>Outstanding payables</h3>'+K.table([{l:'Supplier',k:'name'},{l:'Phone',k:'phone'},{l:'Owed',cls:'num',f:s=>s.balance>0?badge(money(s.balance),'warn'):badge('Settled','ok')}],T('suppliers'),{empty:'No suppliers yet'})+'</div>';
+    }else if(st.tab===5){
+     body.innerHTML='<div class="bar"><span class="sp"></span><button class="btn pri" data-act="paysupp">Pay a supplier</button></div>'+
+      '<div class="card tc">'+K.table([{l:'Date',f:p=>fmtDate(p.date)},{l:'Supplier',f:p=>suppOf(p.supplierId).name},{l:'Method',k:'method'},{l:'Reference',k:'reference'},{l:'Amount',cls:'num',f:p=>out(p.amount)}],T('supplierPayments').slice().reverse(),{empty:'No supplier payments recorded'})+'</div>';
+    }else if(st.tab===6){
+     const rows=T('sales').filter(inRange).filter(s=>!s.voided);
+     const rev=sum(rows,s=>s.total);
+     const cogs=sum(rows,s=>sum(s.items,i=>{const p=get('products',i.id);return(p?p.cost:0)*i.qty;}));
+     const gross=r2(rev-cogs);
+     const exp=T('expenses').filter(inRange);
+     const expTotal=sum(exp,e=>e.amount);
+     const net=r2(gross-expTotal);
+     body.innerHTML=dateBar()+'<div class="card"><h3>Income statement</h3>'+K.table([{l:'',k:'a'},{l:'',cls:'num',f:x=>x.b}],[
+       {a:'Sales revenue',b:money(rev)},{a:'Cost of goods sold',b:'('+out(cogs)+')'},{a:'Gross profit',b:pl(gross)},{a:'Operating expenses',b:'('+out(expTotal)+')'},{a:'Net profit',b:pl(net)}
+      ]).replace(/<thead>.*<\/thead>/,'')+'</div>'+
+      '<div class="bar" style="margin-top:12px"><span class="sp"></span><button class="btn pri" data-act="newexp">Add expense</button></div>'+
+      '<div class="card tc">'+K.table([{l:'Date',f:e=>fmtDate(e.date)},{l:'Category',k:'category'},{l:'Note',k:'note'},{l:'Amount',cls:'num',f:e=>out(e.amount)}],T('expenses').slice().reverse(),{empty:'No expenses logged'})+'</div>';
+    }else{
+     const cashierNames=Array.from(new Set(T('sales').map(s=>s.cashier).filter(Boolean))).sort();
+     const f=st.voidFilter||{cashier:'',ref:'',date:''};
+     let rows=T('sales').filter(s=>!s.voided);
+     if(f.cashier)rows=rows.filter(s=>s.cashier===f.cashier);
+     if(f.ref)rows=rows.filter(s=>s.ref.toLowerCase().includes(f.ref.toLowerCase()));
+     if(f.date)rows=rows.filter(s=>s.date===f.date);
+     rows=rows.sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time)).slice(0,60);
+     body.innerHTML='<div class="bar" style="margin-bottom:12px">'+
+      '<label class="fld"><span>Cashier</span><select id="vf_cashier"><option value="">All cashiers</option>'+cashierNames.map(n=>'<option value="'+esc(n)+'"'+(n===f.cashier?' selected':'')+'>'+esc(n)+'</option>').join('')+'</select></label>'+
+      '<label class="fld"><span>Receipt / invoice number</span><input id="vf_ref" placeholder="e.g. S-0012" value="'+esc(f.ref)+'"></label>'+
+      '<label class="fld"><span>Date</span><input type="date" id="vf_date" value="'+esc(f.date)+'"></label>'+
+      '<span class="sp"></span><button class="btn pri" data-act="vfind">Find</button>'+(f.cashier||f.ref||f.date?'<button class="btn sm" data-act="vclear">Clear</button>':'')+'</div>'+
+      '<div class="card tc">'+K.table([
+      {l:'Receipt',f:s=>'<b>'+esc(s.ref)+'</b><span class="sub2">'+fmtDate(s.date)+' '+esc(s.time)+'</span>'},{l:'Cashier',k:'cashier'},{l:'Branch',f:s=>storeOf(s.storeId).name},{l:'Payment',f:s=>badge(s.method,s.method==='Credit'?'warn':'mute')},
+      {l:'Total',cls:'num',f:s=>money(s.total)},{l:'',cls:'acts',f:s=>'<button class="btn sm bad" data-act="void" data-id="'+s.id+'">Void</button>'}
+     ],rows,{empty:'No matching sales to void'})+'</div>';
+    }
+   };
+   const bind=()=>{
+    el.querySelector('#ltabs').onclick=e=>{const b=e.target.closest('[data-act=tab]');if(b){st.tab=+b.dataset.id;drawTabs();paint();bind();}};
+    const body=el.querySelector('#lbody');
+    body.onclick=e=>{
+     if(e.target.closest('[data-act=extract]')){st.from=body.querySelector('#lf_from').value||st.from;st.to=body.querySelector('#lf_to').value||st.to;paint();bind();return;}
+     if(e.target.closest('[data-act=newinv]'))return K.formModal({title:'Issue new credit invoice',fields:[{k:'customerId',l:'Customer',t:'select',opts:custOpts,req:1},{k:'amount',l:'Amount (GH₵)',t:'number',step:'0.01',req:1},{k:'note',l:'Note',w:'full'}],
+      onSave:v=>{const c=get('customers',v.customerId);if(!c)return false;c.balance=r2(c.balance+Number(v.amount));K.save();const n=T('creditInvoices').length+1;add('creditInvoices',{ref:'CI-'+pad(n,4),customerId:v.customerId,amount:Number(v.amount),note:v.note,date:today()});
+       if(c.phone)K.sms(c.phone,K.S.settings.org+': A credit invoice of '+money(v.amount)+' has been issued to you. Balance: '+money(c.balance)+'.','Credit',c.name);
+       K.log('Credit invoice '+money(v.amount)+' — '+c.name);K.toast('Invoice issued','ok');paint();bind();}});
+     if(e.target.closest('[data-act=recvpay]'))return K.formModal({title:'Receive credit payment',fields:[{k:'customerId',l:'Customer',t:'select',opts:()=>T('customers').filter(c=>c.balance>0).map(c=>({v:c.id,l:c.name+' — owes '+money(c.balance)})),req:1},{k:'amount',l:'Amount received (GH₵)',t:'number',step:'0.01',req:1},{k:'method',l:'Method',t:'select',opts:['Cash','Mobile Money','Card'],blank:false}],
+      onSave:v=>{const c=get('customers',v.customerId);if(!c)return false;if(!(v.amount>0)||v.amount>c.balance+0.01){K.toast('Enter an amount up to '+money(c.balance),'bad');return false;}
+       c.balance=r2(c.balance-Number(v.amount));K.save();add('creditPayments',{customerId:v.customerId,amount:Number(v.amount),date:today(),method:v.method});
+       if(c.phone)K.sms(c.phone,K.S.settings.org+': Thank you. We received '+money(v.amount)+'. Your balance is now '+money(c.balance)+'.','Credit',c.name);
+       K.log('Credit payment '+money(v.amount)+' — '+c.name);K.toast('Payment recorded','ok');paint();bind();}});
+     if(e.target.closest('[data-act=newsinv]'))return K.formModal({title:'Record supplier invoice',fields:[{k:'supplierId',l:'Supplier',t:'select',opts:suppOpts,req:1},{k:'reference',l:'Reference (optional)'},{k:'amount',l:'Amount (GH₵)',t:'number',step:'0.01',req:1}],
+      onSave:v=>{const s=get('suppliers',v.supplierId);if(!s)return false;s.balance=r2(s.balance+Number(v.amount));K.save();const n=T('supplies').length+1;
+       add('supplies',{ref:'GR-'+pad(n,4),supplierId:v.supplierId,reference:v.reference,date:today(),items:[],total:Number(v.amount)});
+       K.log('Supplier invoice '+money(v.amount)+' — '+s.name);K.toast('Invoice recorded','ok');paint();bind();}});
+     if(e.target.closest('[data-act=paysupp]'))return K.formModal({title:'Pay a supplier',fields:[{k:'supplierId',l:'Supplier',t:'select',opts:()=>T('suppliers').filter(s=>s.balance>0).map(s=>({v:s.id,l:s.name+' — owed '+money(s.balance)})),req:1},{k:'amount',l:'Amount (GH₵)',t:'number',step:'0.01',req:1},{k:'method',l:'Method',t:'select',opts:['Cash','Mobile Money','Bank transfer'],blank:false},{k:'reference',l:'Reference (optional)'}],
+      onSave:v=>{const s=get('suppliers',v.supplierId);if(!s)return false;if(!(v.amount>0)||v.amount>s.balance+0.01){K.toast('Enter an amount up to '+money(s.balance),'bad');return false;}
+       s.balance=r2(s.balance-Number(v.amount));K.save();add('supplierPayments',{supplierId:v.supplierId,amount:Number(v.amount),date:today(),method:v.method,reference:v.reference});
+       K.log('Paid supplier '+money(v.amount)+' — '+s.name);K.toast('Payment recorded','ok');paint();bind();}});
+     if(e.target.closest('[data-act=newexp]'))return K.formModal({title:'Add expense',fields:[{k:'date',l:'Date',t:'date',req:1,def:today()},{k:'category',l:'Category',t:'select',opts:['Rent','Utilities','Transport','Salaries','Supplies','Other'],blank:false},{k:'amount',l:'Amount (GH₵)',t:'number',step:'0.01',req:1},{k:'note',l:'Note',w:'full'}],
+      onSave:v=>{add('expenses',{date:v.date,category:v.category,amount:Number(v.amount),note:v.note});K.log('Expense '+money(v.amount)+' — '+v.category);K.toast('Expense recorded','ok');paint();bind();}});
+     if(e.target.closest('[data-act=vfind]')){st.voidFilter={cashier:body.querySelector('#vf_cashier').value,ref:body.querySelector('#vf_ref').value.trim(),date:body.querySelector('#vf_date').value};paint();bind();return;}
+     if(e.target.closest('[data-act=vclear]')){st.voidFilter=null;paint();bind();return;}
+     const vb=e.target.closest('[data-act=void]');
+     if(vb){const s=get('sales',vb.dataset.id);if(!s)return;
+      K.confirm('Void sale '+s.ref+'? This restocks the items sold'+(s.method==='Credit'?' and reverses the credit balance':'')+'.','Void sale',()=>{
+       s.items.forEach(i=>{const p=get('products',i.id);if(p)p.stock=(p.stock||0)+i.qty;});
+       if(s.method==='Credit'&&s.customer){const c=get('customers',s.customer);if(c)c.balance=Math.max(0,r2(c.balance-s.total));}
+       s.voided=true;K.save();K.log('Voided sale '+s.ref);K.toast('Sale voided','ok');paint();bind();
+      },'bad');}
+    };
+   };
+   drawTabs();paint();bind();
+  }
+ },
+
+ dashboard(K){
+  const S=T('sales').filter(s=>!s.voided),t=today(),wk=addDays(t,-6);
+  const tod=S.filter(s=>s.date===t),week=S.filter(s=>s.date>=wk);
+  const low=T('products').filter(p=>p.stock<=p.reorder);
+  const qty={};week.forEach(s=>s.items.forEach(i=>{qty[i.name]=(qty[i.name]||0)+i.qty;}));
+  const top=Object.keys(qty).sort((a,b)=>qty[b]-qty[a]).slice(0,5).map(n=>({t:n,s:'sold this week',r:qty[n]+' units'}));
+  return{
+   kpis:[{l:'Sales today',v:money(sum(tod,s=>s.total)),s:tod.length+' transactions',tone:'ok'},{l:'Sales this week',v:money(sum(week,s=>s.total)),s:week.length+' transactions'},
+    {l:'Low or out of stock',v:low.length,s:'items to reorder (all branches)',tone:'warn'},{l:'Credit owed',v:money(sum(T('customers'),c=>c.balance)),s:T('customers').filter(c=>c.balance>0).length+' customers',tone:'bad'}],
+   chart:{title:'Sales — last 7 days (GH₵)',unit:'money',data:K.lastDays(7,d=>sum(S.filter(s=>s.date===d),s=>s.total))},
+   lists:[{title:'Best sellers this week',items:top},{title:'Running low',items:low.slice(0,5).map(p=>({t:p.name+' ('+storeOf(p.storeId).name+')',s:'Reorder level '+p.reorder,r:p.stock+' left'})),empty:'Stock levels look healthy.'}]
+  };
+ },
+ smsGroups(K){return [{l:'Customers who owe money',people:()=>T('customers').filter(c=>c.balance>0).map(c=>({name:c.name,phone:c.phone}))},{l:'All customers',people:()=>T('customers').map(c=>({name:c.name,phone:c.phone}))}];},
+ smsTemplates:[{l:'Credit reminder',text:'Dear {name}, kindly settle your outstanding balance at Ritpack Supermarket. Thank you for your custom.'},{l:'New stock',text:'Hello {name}, fresh stock has arrived at Ritpack Supermarket. Come and see our new prices!'}]
+};
+
+</script>
+<script>
+K.start(APP_CONFIG);
+</script>
+</body>
+</html>
